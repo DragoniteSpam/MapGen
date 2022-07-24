@@ -41,17 +41,20 @@ function Location(x, y) constructor {
     };
     
     self.Render = function(zoom, map_x, map_y, mx, my) {
+        var mouse_is_over = self.MouseIsOver(zoom, map_x, map_y, mx, my);
         if (obj_main.active_location == self) {
             draw_sprite(spr_location, 2, self.x * zoom + map_x, self.y * zoom + map_y);
-        } else if (self.MouseIsOver(zoom, map_x, map_y, mx, my)) {
+            if (mouse_is_over && mouse_check_button_pressed(mb_left)) {
+                obj_main.location_placing = true;
+            }
+        } else if (mouse_is_over) {
             draw_sprite(spr_location, 1, self.x * zoom + map_x, self.y * zoom + map_y);
             obj_main.hover_location = self;
             if (mouse_check_button_pressed(mb_left)) {
                 if (obj_main.active_location && obj_main.active_location != self && keyboard_check(vk_control)) {
                     obj_main.active_location.Connect(self);
                 } else {
-                    obj_main.active_location = self;
-                    obj_main.container.GetChild("RS").location_placing = true;
+                    obj_main.SetActiveLocation(self);
                 }
             }
         } else {

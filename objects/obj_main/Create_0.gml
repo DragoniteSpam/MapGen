@@ -9,6 +9,7 @@ self.map_sprite = -1;
 self.locations = [];
 self.active_location = undefined;
 self.hover_location = undefined;
+self.location_placing = false;
 
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
@@ -77,19 +78,20 @@ self.container.AddContent([
         var spacing = 1;
         var cmx = (mx div spacing) * spacing / self.zoom;
         var cmy = (my div spacing) * spacing / self.zoom;
-        if (mouse_check_button_pressed(mb_left)) {
+        if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.width && mouse_check_button_pressed(mb_left)) {
             if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
-                obj_main.active_location = new Location(cmx, cmy);
-                self.location_placing = true;
+                obj_main.SetActiveLocation(new Location(cmx, cmy));
                 array_push(obj_main.locations, obj_main.active_location);
             }
         }
         if (mouse_check_button(mb_left)) {
-            if (obj_main.active_location && self.location_placing) {
-                obj_main.active_location.Move(cmx, cmy);
+            if (obj_main.active_location) {
+                if (obj_main.location_placing) {
+                    obj_main.active_location.Move(cmx, cmy);
+                }
             }
         } else {
-            self.location_placing = false;
+            obj_main.location_placing = false;
         }
         if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.height && mouse_check_button_pressed(mb_middle)) {
             self.panning = true;
@@ -111,7 +113,12 @@ self.container.AddContent([
         self.panning = false;
         self.pan_x = 0;
         self.pan_y = 0;
-        self.location_placing = false;
     })
         .SetID("RS")
 ]);
+
+self.SetActiveLocation = function(location) {
+    self.active_location = location;
+    self.location_placing = true;
+    self.container.Refresh();
+};
