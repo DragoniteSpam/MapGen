@@ -56,14 +56,14 @@ self.container.AddContent([
         var cmx = (mx div spacing) * spacing / self.zoom;
         var cmy = (my div spacing) * spacing / self.zoom;
         if (mouse_check_button_pressed(mb_left)) {
-            if (!obj_main.active_location && !obj_main.hover_location) {
+            if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
                 obj_main.active_location = new Location(cmx, cmy);
                 self.location_placing = true;
                 array_push(obj_main.locations, obj_main.active_location);
             }
             // if you click on something this frame it'll be re-registered
             // when you iterate over the locations later
-            obj_main.active_location = undefined;
+            //obj_main.active_location = undefined;
         }
         if (mouse_check_button(mb_left)) {
             if (obj_main.active_location && self.location_placing) {

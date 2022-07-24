@@ -22,19 +22,27 @@ function Location(x, y) constructor {
     };
     
     self.Render = function(zoom, map_x, map_y, mx, my) {
-        static sw = sprite_get_width(spr_location) / 2;
-        static sh = sprite_get_height(spr_location) / 2;
         if (obj_main.active_location == self) {
             draw_sprite(spr_location, 2, self.x * zoom + map_x, self.y * zoom + map_y);
-        } else if (mx >= self.x * zoom - sw && my >= self.y * zoom - sh && mx <= self.x * zoom + sw && my <= self.y * zoom + sh) {
+        } else if (self.MouseIsOver(zoom, map_x, map_y, mx, my)) {
             draw_sprite(spr_location, 1, self.x * zoom + map_x, self.y * zoom + map_y);
             obj_main.hover_location = self;
             if (mouse_check_button_pressed(mb_left)) {
-                obj_main.active_location = self;
-                obj_main.container.GetChild("RS").location_placing = true;
+                if (obj_main.active_location && obj_main.active_location != self && keyboard_check(vk_control)) {
+                    obj_main.active_location.Connect(self);
+                } else {
+                    obj_main.active_location = self;
+                    obj_main.container.GetChild("RS").location_placing = true;
+                }
             }
         } else {
             draw_sprite(spr_location, 0, self.x * zoom + map_x, self.y * zoom + map_y);
         }
+    };
+    
+    self.MouseIsOver = function(zoom, map_x, map_y, mx, my) {
+        static sw = sprite_get_width(spr_location) / 2;
+        static sh = sprite_get_height(spr_location) / 2;
+        return mx >= self.x * zoom - sw && my >= self.y * zoom - sh && mx <= self.x * zoom + sw && my <= self.y * zoom + sh
     };
 }
