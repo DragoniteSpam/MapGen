@@ -34,10 +34,27 @@ self.container.AddContent([
     new EmuButton(32, EMU_AUTO, ew, eh, "Export JSON", function() {
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
-    }),
+    })
+        .SetInteractive(false)
+        .SetRefresh(function() {
+            self.SetInteractive(!!obj_main.active_location);
+            if (!obj_main.active_location) return;
+        }),
     new EmuInput(32, EMU_AUTO, ew, eh, "Name:", "", "location name", 100, E_InputTypes.STRING, function() {
-    }),
-    new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 640, 640, function(mx, my) {
+    })
+        .SetInteractive(false)
+        .SetRefresh(function() {
+            self.SetInteractive(!!obj_main.active_location);
+            if (!obj_main.active_location) return;
+        }),
+    new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", true, function() {
+    })
+        .SetInteractive(false)
+        .SetRefresh(function() {
+            self.SetInteractive(!!obj_main.active_location);
+            if (!obj_main.active_location) return;
+        }),
+    new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 960, 720, function(mx, my) {
         draw_clear(c_black);
         if (sprite_exists(obj_main.map_sprite)) {
             draw_sprite_ext(obj_main.map_sprite, 0, self.map_x, self.map_y, self.zoom, self.zoom, 0, c_white, 1);
