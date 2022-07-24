@@ -21,6 +21,18 @@ function Location(x, y) constructor {
             variable_struct_remove(dest.connections, string(ptr(self)));
     };
     
+    self.RenderConnections = function(zoom, map_x, map_y) {
+        var keys = variable_struct_get_names(self.connections);
+        for (var i = 0, n = array_length(keys); i < n; i++) {
+            var dest = self.connections[$ keys[i]];
+            draw_line_width_color(
+                self.x * zoom + map_x, self.y * zoom + map_y,
+                dest.x * zoom + map_x, dest.y * zoom + map_y,
+                2, c_blue, c_blue
+            );
+        }
+    };
+    
     self.Render = function(zoom, map_x, map_y, mx, my) {
         if (obj_main.active_location == self) {
             draw_sprite(spr_location, 2, self.x * zoom + map_x, self.y * zoom + map_y);

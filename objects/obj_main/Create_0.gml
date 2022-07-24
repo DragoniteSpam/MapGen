@@ -44,6 +44,9 @@ self.container.AddContent([
         }
         obj_main.hover_location = undefined;
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
+            obj_main.locations[i].RenderConnections(self.zoom, self.map_x, self.map_y);
+        }
+        for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
             obj_main.locations[i].Render(self.zoom, self.map_x, self.map_y, mx, my);
         }
     }, function(mx, my) {
