@@ -5,6 +5,7 @@ var eh = 32;
 
 self.map_sprite = -1;
 self.locations = ds_list_create();
+self.active_location = undefined;
 
 self.container.AddContent([
     new EmuText(32, EMU_BASE, ew, eh, "[c_aqua]MapGen"),
@@ -32,6 +33,13 @@ self.container.AddContent([
         if (sprite_exists(obj_main.map_sprite)) {
             draw_sprite(obj_main.map_sprite, 0, 0, 0);
         }
-    }, function() {
+        for (var i = 0, n = ds_list_size(obj_main.locations); i < n; i++) {
+            obj_main.locations[| i].Render(mx, my);
+        }
+    }, function(mx, my) {
+        if (mouse_check_button_pressed(mb_left)) {
+            var spacing = 12;
+            ds_list_add(obj_main.locations, new Location((mx div spacing) * spacing, (my div spacing) * spacing));
+        }
     }, function() { })
 ]);
