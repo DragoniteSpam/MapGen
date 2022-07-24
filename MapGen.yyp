@@ -72,6 +72,7 @@
     {"id":{"name":"__scribble_system_glyph_data","path":"scripts/__scribble_system_glyph_data/__scribble_system_glyph_data.yy",},"order":10,},
     {"id":{"name":"__scribble_gc_collect","path":"scripts/__scribble_gc_collect/__scribble_gc_collect.yy",},"order":8,},
     {"id":{"name":"spr_location","path":"sprites/spr_location/spr_location.yy",},"order":5,},
+    {"id":{"name":"Misc","path":"scripts/Misc/Misc.yy",},"order":6,},
     {"id":{"name":"EmuButton_Image","path":"scripts/EmuButton_Image/EmuButton_Image.yy",},"order":3,},
     {"id":{"name":"__scribble_config_colours","path":"scripts/__scribble_config_colours/__scribble_config_colours.yy",},"order":1,},
     {"id":{"name":"__scribble_class_typist","path":"scripts/__scribble_class_typist/__scribble_class_typist.yy",},"order":5,},

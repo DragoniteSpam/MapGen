@@ -41,14 +41,19 @@ self.container.AddContent([
     new EmuButton(32, EMU_AUTO, ew, eh, "Export JSON", function() {
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
-        obj_main.SetActiveLocation(self.GetSelectedItem());
+        obj_main.active_location = self.GetSelectedItem();
     })
         .SetList(self.locations)
         .SetEntryTypes(E_ListEntryTypes.STRUCTS)
         .SetInteractive(false)
         .SetRefresh(function() {
-            self.SetInteractive(!!obj_main.active_location);
-            if (!obj_main.active_location) return;
+            // ::ClearSelection will erase active_location when it invokes the
+            // list callback so save the original value here and use it instead
+            var location = obj_main.active_location;
+            self.SetInteractive(!!location);
+            if (!location) return;
+            self.ClearSelection();
+            self.Select(array_search(obj_main.locations, location));
         }),
     new EmuInput(32, EMU_AUTO, ew, eh, "Name:", "", "location name", 100, E_InputTypes.STRING, function() {
         obj_main.active_location.name = self.value;
@@ -91,8 +96,9 @@ self.container.AddContent([
         var cmy = (my div spacing) * spacing / self.zoom;
         if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.width && mouse_check_button_pressed(mb_left)) {
             if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
-                obj_main.SetActiveLocation(new Location(cmx, cmy));
-                array_push(obj_main.locations, obj_main.active_location);
+                var location = new Location(cmx, cmy);
+                array_push(obj_main.locations, location);
+                obj_main.SetActiveLocation(location);
             }
         }
         if (mouse_check_button(mb_left)) {
