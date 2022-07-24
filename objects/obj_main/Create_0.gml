@@ -16,6 +16,12 @@ try {
 } catch (e) {
 }
 
+self.SetActiveLocation = function(location) {
+    self.active_location = location;
+    self.location_placing = true;
+    self.container.Refresh();
+};
+
 self.container.AddContent([
     new EmuText(32, EMU_BASE, ew, eh, "[c_aqua]MapGen"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Import Image", function() {
@@ -35,6 +41,7 @@ self.container.AddContent([
     new EmuButton(32, EMU_AUTO, ew, eh, "Export JSON", function() {
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
+        obj_main.SetActiveLocation(self.GetSelectedItem());
     })
         .SetList(self.locations)
         .SetEntryTypes(E_ListEntryTypes.STRUCTS)
@@ -120,9 +127,3 @@ self.container.AddContent([
     })
         .SetID("RS")
 ]);
-
-self.SetActiveLocation = function(location) {
-    self.active_location = location;
-    self.location_placing = true;
-    self.container.Refresh();
-};
