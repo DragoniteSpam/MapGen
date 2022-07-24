@@ -24,6 +24,11 @@ function Location(x, y) constructor {
             draw_sprite(spr_location, 2, self.x * zoom + map_x, self.y * zoom + map_y);
         } else if (mx >= self.x * zoom - sw && my >= self.y * zoom - sh && mx <= self.x * zoom + sw && my <= self.y * zoom + sh) {
             draw_sprite(spr_location, 1, self.x * zoom + map_x, self.y * zoom + map_y);
+            obj_main.hover_location = self;
+            if (mouse_check_button_pressed(mb_left)) {
+                obj_main.active_location = self;
+                obj_main.container.GetChild("RS").location_placing = true;
+            }
         } else {
             draw_sprite(spr_location, 0, self.x * zoom + map_x, self.y * zoom + map_y);
         }

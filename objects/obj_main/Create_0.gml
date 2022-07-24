@@ -8,6 +8,7 @@ var eh = 32;
 self.map_sprite = -1;
 self.locations = ds_list_create();
 self.active_location = undefined;
+self.hover_location = undefined;
 
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
@@ -41,8 +42,10 @@ self.container.AddContent([
         if (sprite_exists(obj_main.map_sprite)) {
             draw_sprite_ext(obj_main.map_sprite, 0, self.map_x, self.map_y, self.zoom, self.zoom, 0, c_white, 1);
         }
+        obj_main.hover_location = undefined;
         for (var i = 0, n = ds_list_size(obj_main.locations); i < n; i++) {
-            obj_main.locations[| i].Render(self.zoom, self.map_x, self.map_y, mx, my);
+            var inst = ds_list_find_value(obj_main.locations, i);
+            inst.Render(self.zoom, self.map_x, self.map_y, mx, my);
         }
     }, function(mx, my) {
         if (mouse_wheel_down()) {
@@ -50,12 +53,28 @@ self.container.AddContent([
         } else if (mouse_wheel_up()) {
             self.zoom = min(4.00, self.zoom + 0.125);
         }
+        var spacing = 1;
+        var cmx = (mx div spacing) * spacing / self.zoom;
+        var cmy = (my div spacing) * spacing / self.zoom;
         if (mouse_check_button_pressed(mb_left)) {
-            var spacing = 1;
-            ds_list_add(obj_main.locations, new Location((mx div spacing) * spacing / self.zoom, (my div spacing) * spacing / self.zoom));
+            if (!obj_main.active_location && !obj_main.hover_location) {
+                obj_main.active_location = new Location(cmx, cmy);
+                self.location_placing = true;
+                ds_list_add(obj_main.locations, obj_main.active_location);
+            }
+            // if you click on something this frame it'll be re-registered
+            // when you iterate over the locations later
+            obj_main.active_location = undefined;
         }
-        
-        if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.width && mouse_check_button_pressed(mb_middle)) {
+        if (mouse_check_button(mb_left)) {
+            if (obj_main.active_location && self.location_placing) {
+                obj_main.active_location.x = cmx;
+                obj_main.active_location.y = cmy;
+            }
+        } else {
+            self.location_placing = false;
+        }
+        if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.height && mouse_check_button_pressed(mb_middle)) {
             self.panning = true;
             self.pan_x = mx;
             self.pan_y = my;
@@ -75,5 +94,7 @@ self.container.AddContent([
         self.panning = false;
         self.pan_x = 0;
         self.pan_y = 0;
+        self.location_placing = false;
     })
+        .SetID("RS")
 ]);
