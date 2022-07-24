@@ -65,7 +65,11 @@ function Location(x, y) constructor {
             obj_main.hover_location = self;
             if (mouse_check_button_pressed(mb_left)) {
                 if (obj_main.active_location && obj_main.active_location != self && keyboard_check(vk_control)) {
-                    obj_main.active_location.Connect(self);
+                    if (self.IsConnected(obj_main.active_location)) {
+                        obj_main.active_location.Disconnect(self);
+                    } else {
+                        obj_main.active_location.Connect(self);
+                    }
                 } else {
                     obj_main.SetActiveLocation(self);
                 }
