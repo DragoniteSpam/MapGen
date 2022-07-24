@@ -4,6 +4,7 @@ var ew = 320;
 var eh = 32;
 
 self.map_sprite = -1;
+self.locations = ds_list_create();
 
 self.container.AddContent([
     new EmuText(32, EMU_BASE, ew, eh, "[c_aqua]MapGen"),
