@@ -42,7 +42,7 @@ self.container.AddContent([
             draw_sprite_ext(obj_main.map_sprite, 0, self.map_x, self.map_y, self.zoom, self.zoom, 0, c_white, 1);
         }
         for (var i = 0, n = ds_list_size(obj_main.locations); i < n; i++) {
-            obj_main.locations[| i].Render(self.zoom, mx, my);
+            obj_main.locations[| i].Render(self.zoom, self.map_x, self.map_y, mx, my);
         }
     }, function(mx, my) {
         if (mouse_wheel_down()) {
@@ -51,11 +51,29 @@ self.container.AddContent([
             self.zoom = min(4.00, self.zoom + 0.125);
         }
         if (mouse_check_button_pressed(mb_left)) {
-            var spacing = 12;
+            var spacing = 1;
             ds_list_add(obj_main.locations, new Location((mx div spacing) * spacing / self.zoom, (my div spacing) * spacing / self.zoom));
+        }
+        
+        if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.width && mouse_check_button_pressed(mb_middle)) {
+            self.panning = true;
+            self.pan_x = mx;
+            self.pan_y = my;
+        }
+        if (mouse_check_button(mb_middle)) {
+            self.map_x += mx - self.pan_x;
+            self.map_y += my - self.pan_y;
+            self.pan_x = mx;
+            self.pan_y = my;
+        } else {
+            self.panning = false;
         }
     }, function() {
         self.zoom = 1;
         self.map_x = 0;
         self.map_y = 0;
+        self.panning = false;
+        self.pan_x = 0;
+        self.pan_y = 0;
+    })
 ]);

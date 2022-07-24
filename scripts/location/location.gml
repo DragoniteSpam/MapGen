@@ -17,15 +17,15 @@ function Location(x, y) constructor {
             variable_struct_remove(dest.connections, string(ptr(self)));
     };
     
-    self.Render = function(zoom, mx, my) {
+    self.Render = function(zoom, map_x, map_y, mx, my) {
         static sw = sprite_get_width(spr_location) / 2;
         static sh = sprite_get_height(spr_location) / 2;
         if (obj_main.active_location == self) {
-            draw_sprite(spr_location, 2, self.x, self.y);
+            draw_sprite(spr_location, 2, self.x * zoom + map_x, self.y * zoom + map_y);
         } else if (mx >= self.x * zoom - sw && my >= self.y * zoom - sh && mx <= self.x * zoom + sw && my <= self.y * zoom + sh) {
-            draw_sprite(spr_location, 1, self.x * zoom, self.y * zoom);
+            draw_sprite(spr_location, 1, self.x * zoom + map_x, self.y * zoom + map_y);
         } else {
-            draw_sprite(spr_location, 0, self.x * zoom, self.y * zoom);
+            draw_sprite(spr_location, 0, self.x * zoom + map_x, self.y * zoom + map_y);
         }
     };
 }
