@@ -1,7 +1,7 @@
 function Location(x, y) constructor {
     self.x = x;
     self.y = y;
-    self.name = "Location" + string(ds_list_size(obj_main.locations));
+    self.name = "Location" + string(array_length(obj_main.locations));
     
     self.connections = { };
     

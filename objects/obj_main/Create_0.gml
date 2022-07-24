@@ -6,7 +6,7 @@ var ew = 320;
 var eh = 32;
 
 self.map_sprite = -1;
-self.locations = ds_list_create();
+self.locations = [];
 self.active_location = undefined;
 self.hover_location = undefined;
 
@@ -43,9 +43,8 @@ self.container.AddContent([
             draw_sprite_ext(obj_main.map_sprite, 0, self.map_x, self.map_y, self.zoom, self.zoom, 0, c_white, 1);
         }
         obj_main.hover_location = undefined;
-        for (var i = 0, n = ds_list_size(obj_main.locations); i < n; i++) {
-            var inst = ds_list_find_value(obj_main.locations, i);
-            inst.Render(self.zoom, self.map_x, self.map_y, mx, my);
+        for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
+            obj_main.locations[i].Render(self.zoom, self.map_x, self.map_y, mx, my);
         }
     }, function(mx, my) {
         if (mouse_wheel_down()) {
@@ -60,7 +59,7 @@ self.container.AddContent([
             if (!obj_main.active_location && !obj_main.hover_location) {
                 obj_main.active_location = new Location(cmx, cmy);
                 self.location_placing = true;
-                ds_list_add(obj_main.locations, obj_main.active_location);
+                array_push(obj_main.locations, obj_main.active_location);
             }
             // if you click on something this frame it'll be re-registered
             // when you iterate over the locations later
