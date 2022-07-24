@@ -8,6 +8,17 @@ self.map_sprite = -1;
 self.container.AddContent([
     new EmuText(32, EMU_BASE, ew, eh, "[c_aqua]MapGen"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Import Image", function() {
+        var path = get_open_filename("Image files|*.png;*.bmp", "map.png");
+        if (file_exists(path)) {
+            try {
+                var sprite = sprite_add(path, 0, false, false, 0, 0);
+                if (sprite_exists(obj_main.map_sprite)) {
+                    sprite_delete(obj_main.map_sprite);
+                }
+                obj_main.map_sprite = sprite;
+            } catch (e) {
+            }
+        }
     }),
     new EmuButton(32, EMU_AUTO, ew, eh, "Export JSON", function() {
     }),
