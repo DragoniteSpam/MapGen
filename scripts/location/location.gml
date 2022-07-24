@@ -2,8 +2,15 @@ function Location(x, y) constructor {
     self.x = x;
     self.y = y;
     self.name = "Location" + string(array_length(obj_main.locations));
+    self.locked = true;
     
     self.connections = { };
+    
+    self.Move = function(x, y) {
+        if (self.locked) return;
+        self.x = x;
+        self.y = y;
+    };
     
     self.Connect = function(dest) {
         self.connections[$ string(ptr(dest))] = dest;

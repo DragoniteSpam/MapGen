@@ -48,11 +48,13 @@ self.container.AddContent([
             if (!obj_main.active_location) return;
         }),
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", true, function() {
+        obj_main.active_location.locked = self.value;
     })
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
+            self.value = obj_main.active_location.locked;
         }),
     new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 960, 720, function(mx, my) {
         draw_clear(c_black);
@@ -81,14 +83,10 @@ self.container.AddContent([
                 self.location_placing = true;
                 array_push(obj_main.locations, obj_main.active_location);
             }
-            // if you click on something this frame it'll be re-registered
-            // when you iterate over the locations later
-            //obj_main.active_location = undefined;
         }
         if (mouse_check_button(mb_left)) {
             if (obj_main.active_location && self.location_placing) {
-                obj_main.active_location.x = cmx;
-                obj_main.active_location.y = cmy;
+                obj_main.active_location.Move(cmx, cmy);
             }
         } else {
             self.location_placing = false;
