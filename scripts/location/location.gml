@@ -10,6 +10,10 @@ function Location(x, y) constructor {
         dest.connections[$ string(ptr(self))] = self;
     };
     
+    self.IsConnected = function(dest) {
+        return variable_struct_exists(self.connections, string(ptr(dest)));
+    };
+    
     self.Disconnect = function(dest) {
         if (variable_struct_exists(self.connections, string(ptr(dest))))
             variable_struct_remove(self.connections, string(ptr(dest)));
