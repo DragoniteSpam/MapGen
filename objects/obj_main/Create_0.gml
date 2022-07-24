@@ -92,6 +92,10 @@ self.container.AddContent([
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
             obj_main.locations[i].RenderPost(self.zoom, self.map_x, self.map_y, mx, my);
         }
+        draw_set_alpha(0.75);
+        draw_rectangle_colour(0, 0, 640, 32, c_white, c_white, c_white, c_white, false);
+        draw_set_alpha(1);
+        draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations", c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
         if (mouse_wheel_down()) {
             self.zoom = max(0.25, self.zoom - 0.125);
