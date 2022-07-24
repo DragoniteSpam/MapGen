@@ -78,6 +78,6 @@ function Location(x, y) constructor {
     self.MouseIsOver = function(zoom, map_x, map_y, mx, my) {
         static sw = sprite_get_width(spr_location) / 2;
         static sh = sprite_get_height(spr_location) / 2;
-        return mx >= self.x * zoom - sw && my >= self.y * zoom - sh && mx <= self.x * zoom + sw && my <= self.y * zoom + sh
+        return mx >= self.x * zoom - sw + map_x && my >= self.y * zoom - sh + map_y && mx <= self.x * zoom + sw + map_x && my <= self.y * zoom + sh + map_y;
     };
 }
