@@ -40,6 +40,19 @@ function Location(x, y) constructor {
         }
     };
     
+    self.RenderPre = function(zoom, map_x, map_y, mx, my) {
+        var xx = self.x * zoom + map_x;
+        var yy = self.y * zoom + map_y;
+        if (self.locked) {
+            draw_sprite(spr_lock, 0, xx, yy + 20);
+        }
+    };
+    
+    self.RenderPost = function(zoom, map_x, map_y, mx, my) {
+        var xx = self.x * zoom + map_x;
+        var yy = self.y * zoom + map_y;
+    };
+    
     self.Render = function(zoom, map_x, map_y, mx, my) {
         var mouse_is_over = self.MouseIsOver(zoom, map_x, map_y, mx, my);
         if (obj_main.active_location == self) {

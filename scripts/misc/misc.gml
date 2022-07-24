@@ -4,3 +4,6 @@ function array_search(array, item) {
     }
     return -1;
 }
+
+#macro MAP_IN_STORAGE       "map.png"
+#macro KEY_TOGGLE_LOCKED    vk_f2

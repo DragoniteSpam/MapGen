@@ -1,5 +1,3 @@
-#macro MAP_IN_STORAGE       "map.png"
-
 self.container = new EmuCore(0, 0, window_get_width(), window_get_height());
 
 var ew = 320;
@@ -7,7 +5,9 @@ var eh = 32;
 
 self.map_sprite = -1;
 self.locations = [];
+/// {struct.Location|undefined}
 self.active_location = undefined;
+/// {struct.Location|undefined}
 self.hover_location = undefined;
 self.location_placing = false;
 
@@ -72,7 +72,8 @@ self.container.AddContent([
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
             self.value = obj_main.active_location.locked;
-        }),
+        })
+        .SetID("LOCK"),
     new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 960, 720, function(mx, my) {
         draw_clear(c_black);
         if (sprite_exists(obj_main.map_sprite)) {
@@ -83,7 +84,13 @@ self.container.AddContent([
             obj_main.locations[i].RenderConnections(self.zoom, self.map_x, self.map_y);
         }
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
+            obj_main.locations[i].RenderPre(self.zoom, self.map_x, self.map_y, mx, my);
+        }
+        for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
             obj_main.locations[i].Render(self.zoom, self.map_x, self.map_y, mx, my);
+        }
+        for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
+            obj_main.locations[i].RenderPost(self.zoom, self.map_x, self.map_y, mx, my);
         }
     }, function(mx, my) {
         if (mouse_wheel_down()) {
@@ -92,8 +99,8 @@ self.container.AddContent([
             self.zoom = min(4.00, self.zoom + 0.125);
         }
         var spacing = 1;
-        var cmx = (mx div spacing) * spacing / self.zoom;
-        var cmy = (my div spacing) * spacing / self.zoom;
+        var cmx = ((mx - self.map_x) div spacing) * spacing / self.zoom;
+        var cmy = ((my - self.map_y) div spacing) * spacing / self.zoom;
         if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.width && mouse_check_button_pressed(mb_left)) {
             if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
                 var location = new Location(cmx, cmy);
@@ -102,10 +109,8 @@ self.container.AddContent([
             }
         }
         if (mouse_check_button(mb_left)) {
-            if (obj_main.active_location) {
-                if (obj_main.location_placing) {
-                    obj_main.active_location.Move(cmx, cmy);
-                }
+            if (obj_main.active_location && obj_main.location_placing) {
+                obj_main.active_location.Move(cmx, cmy);
             }
         } else {
             obj_main.location_placing = false;
@@ -122,6 +127,11 @@ self.container.AddContent([
             self.pan_y = my;
         } else {
             self.panning = false;
+        }
+        
+        if (obj_main.active_location && keyboard_check_pressed(KEY_TOGGLE_LOCKED)) {
+            obj_main.active_location.locked = !obj_main.active_location.locked;
+            obj_main.container.GetChild("LOCK").Refresh();
         }
     }, function() {
         self.zoom = 1;
