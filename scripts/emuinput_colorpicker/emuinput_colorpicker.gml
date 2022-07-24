@@ -3,7 +3,7 @@
 
 // I wanted to make this inherit from EmuInput but that made GameMaker cranky
 // for some reason
-function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w, h, text, value, callback) constructor {
+function EmuColorPicker(x, y, width, height, text, value, callback) : EmuCallback(x, y, width, height, text, value, callback) constructor {
     self.allow_alpha = false;
     
     self.box = {
@@ -13,14 +13,14 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
         y2: self.height,
     };
     
-    self.color_back = function() { return EMU_COLOR_BACK };
+    self.color_back = function() { return EMU_COLOR_BACK; };
     
-    static SetAlphaUsed = function(alpha_used) {
+    self.SetAlphaUsed = function(alpha_used) {
         self.allow_alpha = alpha_used;
         return self;
     };
     
-    static SetInputBoxPosition = function(vx1, vy1, vx2, vy2) {
+    self.SetInputBoxPosition = function(vx1, vy1, vx2, vy2) {
         self.box.x1 = vx1;
         self.box.y1 = vy1;
         self.box.x2 = vx2;
@@ -28,8 +28,9 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
         return self;
     };
     
-    static Render = function(base_x, base_y) {
+    self.Render = function(base_x, base_y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = x + base_x;
@@ -76,7 +77,7 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
                     var yy = 64;
                     var spacing = 16;
                     
-                    static controls = function(x, y, w, h, value, allow_alpha, callback) : EmuCallback(x, y, w, h, "", value, callback) constructor {
+                    static controls = function(x, y, width, height, value, allow_alpha, callback) : EmuCallback(x, y, width, height, "", value, callback) constructor {
                         enum EmuColorChannels { R, G, B, A }
                         
                         self.axis_value = 0;
@@ -94,9 +95,9 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
                         self.main_size = 176;
                         self.selecting_color = false;
                         
-                        self.sprite_crosshair = spr_emu_mask_crosshair;
-                        self.sprite_mask_bar_h = spr_emu_mask_bar_h;
-                        self.sprite_mask_bar_v = spr_emu_mask_bar_v;
+                        self.sprite_crosshair = EMU_SPRITE_CROSSHAIR;
+                        self.sprite_mask_bar_h = EMU_SPRITE_MENU_BAR_H;
+                        self.sprite_mask_bar_v = EMU_SPRITE_MENU_BAR_V;
                         
                         self.axis_x = self.color_x + self.main_size + 16;
                         self.axis_y = self.color_y;
@@ -115,7 +116,7 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
                         self.alpha_height = 16;
                         self.selecting_alpha = false;
                         
-                        static SetValue = function(value) {
+                        self.SetValue = function(value) {
                             self.value = value;
                             
                             switch (self.axis_channel) {
@@ -137,7 +138,7 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
                             }
                         };
                         
-                        static Render = function(base_x, base_y) {
+                        self.Render = function(base_x, base_y, debug_render = false) {
                             self.gc.Clean();
                             var x1 = x + base_x;
                             var y1 = y + base_y;
@@ -308,6 +309,8 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
                             if (color_initial != self.value || alpha_initial != self.alpha) {
                                 self.callback();
                             }
+                            
+                            if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
                         }
                     }
                     
@@ -350,5 +353,7 @@ function EmuColorPicker(x, y, w, h, text, value, callback) : EmuCallback(x, y, w
                 self.ShowTooltip();
             }
         }
+        
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
     };
 }

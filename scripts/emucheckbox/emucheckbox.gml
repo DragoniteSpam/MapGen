@@ -1,62 +1,63 @@
 // Emu (c) 2020 @dragonitespam
 // See the Github wiki for documentation: https://github.com/DragoniteSpam/Documentation/wiki/Emu
-function EmuCheckbox(x, y, w, h, text, value, callback) : EmuCallback(x, y, w, h, text, value, callback) constructor {
+function EmuCheckbox(x, y, width, height, text, value, callback) : EmuCallback(x, y, width, height, text, value, callback) constructor {
     /// @ignore
     self.box_size = 20;
     /// @ignore
-    self.sprite_check = spr_emu_checkbox;
+    self.sprite_check = EMU_SPRITE_CHECKBOX;
     /// @ignore
-    self.sprite_check_border = spr_emu_checkbox_border;
+    self.sprite_check_border = EMU_SPRITE_CHECKBOX_BORDER;
     
     /// @ignore
-    self.color_active = function() { return EMU_COLOR_RADIO_ACTIVE };
+    self.color_active = function() { return EMU_COLOR_RADIO_ACTIVE; };
     /// @ignore
-    self.color_hover = function() { return EMU_COLOR_HOVER };
+    self.color_hover = function() { return EMU_COLOR_HOVER; };
     /// @ignore
-    self.color_disabled = function() { return EMU_COLOR_DISABLED };
+    self.color_disabled = function() { return EMU_COLOR_DISABLED; };
     /// @ignore
-    self.color_back = function() { return EMU_COLOR_BACK };
+    self.color_back = function() { return EMU_COLOR_BACK; };
     
     #region mutators
-    static SetBoxSize = function(size) {
+    self.SetBoxSize = function(size) {
         self.box_size = size;
         return self;
     };
     
-    static SetSpriteCheck = function(sprite) {
+    self.SetSpriteCheck = function(sprite) {
         self.box_size = sprite;
         return self;
     };
     
-    static SetSpriteBorder = function(sprite) {
+    self.SetSpriteBorder = function(sprite) {
         self.box_size = sprite;
         return self;
     };
     
-    static SetColorActive = function(color_function) {
+    self.SetColorActive = function(color_function) {
         self.color_active = method(self, color_function);
         return self;
     };
     
-    static SetColorHover = function(color_function) {
+    self.SetColorHover = function(color_function) {
         self.color_hover = method(self, color_function);
         return self;
     };
     
-    static SetColorDisabled = function(color_function) {
+    self.SetColorDisabled = function(color_function) {
         self.color_disabled = method(self, color_function);
         return self;
     };
     
-    static SetColorBack = function(color_function) {
+    self.SetColorBack = function(color_function) {
         self.color_back = method(self, color_function);
         return self;
     };
     #endregion
     
     #region other methods
-    static Render = function(x, y) {
+    self.Render = function(x, y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = self.x + x;
@@ -89,6 +90,8 @@ function EmuCheckbox(x, y, w, h, text, value, callback) : EmuCallback(x, y, w, h
             .wrap(self.width, self.height)
             .align(self.align.h, self.align.v)
             .draw(x1 + self.box_size + self.offset * 2, floor(mean(y1, y2)));
+        
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
     };
     #endregion
 }

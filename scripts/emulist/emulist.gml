@@ -1,15 +1,15 @@
 // Emu (c) 2020 @dragonitespam
 // See the Github wiki for documentation: https://github.com/DragoniteSpam/Documentation/wiki/Emu
-function EmuList(x, y, w, h, text, element_height, content_slots, callback) : EmuCallback(x, y, w, h, text, 0, callback) constructor {
+function EmuList(x, y, width, header_height, text, element_height, content_slots, callback) : EmuCallback(x, y, width, header_height, text, 0, callback) constructor {
     enum E_ListEntryTypes { STRINGS, STRUCTS, SCRIPTS };
     
     self.element_height = element_height;
     self.slots = content_slots;
     
-    self.color_back = function() { return EMU_COLOR_BACK };
-    self.color_hover = function() { return EMU_COLOR_HOVER };
-    self.color_disabled = function() { return EMU_COLOR_DISABLED };
-    self.color_selected = function() { return EMU_COLOR_SELECTED };
+    self.color_back = function() { return EMU_COLOR_BACK; };
+    self.color_hover = function() { return EMU_COLOR_HOVER; };
+    self.color_disabled = function() { return EMU_COLOR_DISABLED; };
+    self.color_selected = function() { return EMU_COLOR_SELECTED; };
     
     self.auto_multi_select = false;
     self.allow_multi_select = false;
@@ -19,8 +19,8 @@ function EmuList(x, y, w, h, text, element_height, content_slots, callback) : Em
     self.numbered = false;
     self.text_vacant = "(empty list)";
     
-    self.sprite_help = spr_emu_help;
-    self.sprite_arrows = spr_emu_scroll_arrow;
+    self.sprite_help = EMU_SPRITE_HELP;
+    self.sprite_arrows = EMU_SPRITE_SCROLL_ARROW;
     
     self.index = 0;
     self.click_x = -1;
@@ -32,31 +32,40 @@ function EmuList(x, y, w, h, text, element_height, content_slots, callback) : Em
     self.entries = [];
 	self.dragging = false;
     
-    static SetList = function(array) {
+    self.At = function(index) {
+        return (index < 0 || index >= array_length(self.entries)) ? undefined : self.entries[index];
+    };
+    
+    self.SetList = function(array) {
         self.entries = array;
         self.own_entries = false;
         self.ClearSelection();
         return self;
     };
     
-    static SetEntryTypes = function(type) {
+    self.SetEntryTypes = function(type) {
         self.entries_are = type;
         return self;
     };
     
-    static SetMultiSelect = function(multi_select, auto, toggle) {
+    self.SetMultiSelect = function(multi_select, auto, toggle) {
         self.allow_multi_select = multi_select;
         self.auto_multi_select = auto;
         self.select_toggle = toggle;
         return self;
     };
     
-    static SetVacantText = function(text) {
+    self.SetVacantText = function(text) {
         self.text_vacant = text;
         return self;
     };
     
-    static AddEntries = function(elements) {
+    self.SetNumbered = function(numbered) {
+        self.numbered = numbered;
+        return self;
+    };
+    
+    self.AddEntries = function(elements) {
         if (!self.own_entries) {
             throw new EmuException("Trying to add to a list owned by someone else", "Please do not add to a list using an external list for its entries.");
         }
@@ -68,7 +77,7 @@ function EmuList(x, y, w, h, text, element_height, content_slots, callback) : Em
         return self;
     };
     
-    static Clear = function() {
+    self.Clear = function() {
         if (self.own_entries) {
             self.entries = [];
         } else {
@@ -77,30 +86,70 @@ function EmuList(x, y, w, h, text, element_height, content_slots, callback) : Em
         return self;
     };
     
-    static GetHeight = function() {
+    self.FitToBox = function(total_width = self.width, total_height = self.GetHeight(), header_height = self.height) {
+        self.width = total_width;
+        self.height = header_height;
+        self.slots = (total_height - header_height) / self.element_height;
+        return self;
+    };
+    
+    self.GetHeight = function() {
         return self.height + self.element_height * self.slots;
     };
     
-    static GetSelected = function(list_index) {
+    self.GetSelected = function(list_index) {
         return variable_struct_exists(self.selected_entries, string(list_index));
     };
     
-    static getListColors = function(list_index) {
+    self.getListColors = function(list_index) {
         return EMU_COLOR_LIST_TEXT;
     };
     
-    static GetSelection = function() {
+	self.ForEachSelection = function(f) {
+		var names = variable_struct_get_names(self.selected_entries);
+		for (var i = 0, n = array_length(names); i < n; i++) {
+    		if (names[i] == "first") continue;
+    		if (names[i] == "last") continue;
+			f(real(names[i]));
+		}
+	};
+	
+    self.GetAllSelectedIndices = function() {
+    	var names = variable_struct_get_names(self.selected_entries);
+    	var n = array_length(names);
+    	if (self.selected_entries[$ "first"] != undefined) n--;
+    	if (self.selected_entries[$ "last"] != undefined) n--;
+    	
+    	var results = array_create(n);
+    	var index = 0;
+    	for (var i = array_length(names) - 1; i >= 0; i--) {
+    		if (names[i] == "first") continue;
+    		if (names[i] == "last") continue;
+    		results[index++] = real(names[i]);
+    	}
+    	
+    	return results;
+    };
+    
+    self.GetSelection = function() {
         if (variable_struct_names_count(self.selected_entries) == 0) return -1;
         return self.selected_entries[$ "first"];
     };
     
-    static ClearSelection = function() {
+    self.GetSelectedItem = function() {
+        var selection = self.GetSelection();
+        if (selection < 0 || selection >= array_length(self.entries)) return undefined;
+        return self.entries[selection];
+    };
+    
+    self.ClearSelection = function() {
         self.selected_entries = { };
         self.callback();
         return self;
     };
     
-    static Select = function(list_index, set_index = false) {
+    self.Select = function(list_index, set_index = false) {
+        if (list_index < 0 || list_index >= array_length(self.entries)) return self;
         if (!variable_struct_exists(self.selected_entries, "first")) self.selected_entries[$ "first"] = list_index;
         self.selected_entries[$ "last"] = list_index;
         self.selected_entries[$ string(list_index)] = true;
@@ -111,14 +160,15 @@ function EmuList(x, y, w, h, text, element_height, content_slots, callback) : Em
         return self;
     };
     
-    static Deselect = function(list_index) {
+    self.Deselect = function(list_index) {
         variable_struct_remove(self.selected_entries, list_index);
         self.callback();
         return self;
     };
     
-    static Render = function(base_x, base_y) {
+    self.Render = function(base_x, base_y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var col_main = self.color();
@@ -372,5 +422,10 @@ function EmuList(x, y, w, h, text, element_height, content_slots, callback) : Em
             self.index = clamp(self.index + move_direction, 0, max(0, n - self.slots));
         }
         #endregion
+        
+        if (debug_render) {
+            self.renderDebugBounds(x1, y1, x2, y2);
+            self.renderDebugBounds(x1, y2, x2, y3);
+        }
     };
 }

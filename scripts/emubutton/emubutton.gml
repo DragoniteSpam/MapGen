@@ -1,36 +1,37 @@
 // Emu (c) 2020 @dragonitespam
 // See the Github wiki for documentation: https://github.com/DragoniteSpam/Documentation/wiki/Emu
-function EmuButton(x, y, w, h, text, callback) : EmuCallback(x, y, w, h, text, 0, callback) constructor {
+function EmuButton(x, y, width, height, text, callback) : EmuCallback(x, y, width, height, text, 0, callback) constructor {
     self.align.h = fa_center;
     self.align.v = fa_middle;
     
     /// @ignore
-    self.color_hover = function() { return EMU_COLOR_HOVER };
+    self.color_hover = function() { return EMU_COLOR_HOVER; };
     /// @ignore
-    self.color_back = function() { return EMU_COLOR_BACK };
+    self.color_back = function() { return EMU_COLOR_BACK; };
     /// @ignore
-    self.color_disabled = function() { return EMU_COLOR_DISABLED };
+    self.color_disabled = function() { return EMU_COLOR_DISABLED; };
     
     #region mutators
-    static SetColorHover = function(color_function) {
+    self.SetColorHover = function(color_function) {
         self.color_hover = method(self, color_function);
         return self;
     };
     
-    static SetColorDisabled = function(color_function) {
+    self.SetColorDisabled = function(color_function) {
         self.color_disabled = method(self, color_function);
         return self;
     };
     
-    static SetColorBack = function(color_function) {
+    self.SetColorBack = function(color_function) {
         self.color_back = method(self, color_function);
         return self;
     };
     #endregion
     
     #region other methods
-    static Render = function(x, y) {
+    self.Render = function(x, y, debug_render) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = self.x + x;
@@ -55,6 +56,8 @@ function EmuButton(x, y, w, h, text, callback) : EmuCallback(x, y, w, h, text, 0
             .wrap(self.width, self.height)
             .align(self.align.h, self.align.v)
             .draw(floor(mean(x1, x2)), floor(mean(y1, y2)));
+        
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
     };
     #endregion
 }

@@ -18,11 +18,11 @@ function EmuDialog(w, h, title, callback = function() { EmuOverlay.Pop(); }) : E
     /// @ignore
     self.changed = false;
     /// @ignore
-    self.sprite_close = spr_emu_close;
+    self.sprite_close = EMU_SPRITE_CLOSE_BUTTON;
     /// @ignore
-    self.color_header = function() { return EMU_COLOR_WINDOWSKIN };
+    self.color_header = function() { return EMU_COLOR_WINDOWSKIN; };
     /// @ignore
-    self.color_back = function() { return EMU_COLOR_BACK };
+    self.color_back = function() { return EMU_COLOR_BACK; };
     
     /// @ignore
     self.header_height = 32;
@@ -35,44 +35,59 @@ function EmuDialog(w, h, title, callback = function() { EmuOverlay.Pop(); }) : E
     
     EmuOverlay.AddContent(self);
     
+    #region
+    self.AddDefaultCloseButton = function(name = "Close", callback = function() { self.root.Close(); }) {
+        return self.AddContent([new EmuButton(self.width / 2 - EMU_DEFAULT_CLOSE_BUTTON_WIDTH / 2, self.height - 48, EMU_DEFAULT_CLOSE_BUTTON_WIDTH, EMU_DEFAULT_CLOSE_BUTTON_HEIGHT, name, callback)]);
+    };
+    
+    self.AddDefaultConfirmCancelButtons = function(confirm_name, confirm_callback, cancel_name, cancel_callback) {
+        return self.AddContent([
+            new EmuButton(self.width / 2 - EMU_DEFAULT_CLOSE_BUTTON_WIDTH - 16, self.height - 48, EMU_DEFAULT_CLOSE_BUTTON_WIDTH, EMU_DEFAULT_CLOSE_BUTTON_HEIGHT, confirm_name, confirm_callback),
+            new EmuButton(self.width / 2 + 16, self.height - 48, EMU_DEFAULT_CLOSE_BUTTON_WIDTH, EMU_DEFAULT_CLOSE_BUTTON_HEIGHT, cancel_name, cancel_callback)
+        ]);
+    };
+    #endregion
+    
     #region mutators
-    static SetCloseButton = function(show) {
+    self.SetCloseButton = function(show) {
         self.close_button = show;
         return self;
     };
     
-    static SetSpriteClose = function(sprite) {
+    self.SetSpriteClose = function(sprite) {
         self.sprite_close = sprite;
         return self;
     };
     
-    static SetActiveShade = function(shade) {
+    self.SetActiveShade = function(shade) {
         self.active_shade = shade;
         return self;
     };
     
-    static SetTitle = function(text) {
+    self.SetTitle = function(text) {
         self.text = text;
         return self;
     };
     #endregion
     
     #region accessors
-    static GetHeight = function() {
+    self.GetHeight = function() {
         return self.height + self.header_height;
     };
     #endregion
     
     #region public methods
-    static Close = function() {
+    self.Close = function() {
         // this needs to be done after the entire dialog box is finished rendering
         self.disposed = true;
     };
     
-    static Render = function() {
+    self.Render = function(base_x, base_y, debug_render = false) {
         self.gc.Clean();
-        var x1 = x;
-        var y1 = y;
+        self.update_script();
+        
+        var x1 = self.x + base_x;
+        var y1 = self.y + base_y;
         var x2 = x1 + self.width;
         var y2 = y1 + self.GetHeight();
         
@@ -151,7 +166,9 @@ function EmuDialog(w, h, title, callback = function() { EmuOverlay.Pop(); }) : E
             draw_sprite(self.sprite_close, cbi, cbx1, cby1);
         }
         
-        self.renderContents(x1, y1 + self.header_height);
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
+        
+        self.renderContents(x1, y1 + self.header_height, debug_render);
         
         kill |= (active && self.close_button && keyboard_check_released(vk_escape) && !(EmuActiveElement && EmuActiveElement.override_escape)) || self.disposed;
         
@@ -163,7 +180,7 @@ function EmuDialog(w, h, title, callback = function() { EmuOverlay.Pop(); }) : E
     
     #region private methods
     // Override this function for dialogs
-    static isActiveDialog = function() {
+    self.isActiveDialog = function() {
         return (EmuOverlay.contents[array_length(EmuOverlay.contents) - 1] == self);
     };
     #endregion

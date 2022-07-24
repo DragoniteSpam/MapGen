@@ -1,6 +1,6 @@
 // Emu (c) 2020 @dragonitespam
 // See the Github wiki for documentation: https://github.com/DragoniteSpam/Documentation/wiki/Emu
-function EmuButtonImage(x, y, w, h, sprite, index, blend, alpha, scale_to_fit, callback) : EmuCallback(x, y, w, h, "", 0, callback) constructor {
+function EmuButtonImage(x, y, width, height, sprite, index, blend, alpha, scale_to_fit, callback) : EmuCallback(x, y, width, height, "", 0, callback) constructor {
     self.sprite = sprite;
     self.blend = blend;
     self.alpha = alpha;
@@ -10,17 +10,18 @@ function EmuButtonImage(x, y, w, h, sprite, index, blend, alpha, scale_to_fit, c
     self.align.h = fa_center;
     self.align.v = fa_middle;
     
-    self.color_hover = function() { return EMU_COLOR_HOVER };
-    self.color_back = function() { return EMU_COLOR_BACK };
-    self.color_disabled = function() { return EMU_COLOR_DISABLED };
+    self.color_hover = function() { return EMU_COLOR_HOVER; };
+    self.color_back = function() { return EMU_COLOR_BACK; };
+    self.color_disabled = function() { return EMU_COLOR_DISABLED; };
     
     self.checker_background = false;
     
     self.surface = -1;
     self.index = index;
     
-    static Render = function(base_x, base_y) {
+    self.Render = function(base_x, base_y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = x + base_x;
@@ -35,7 +36,7 @@ function EmuButtonImage(x, y, w, h, sprite, index, blend, alpha, scale_to_fit, c
         draw_clear_alpha(c_black, 0);
         draw_sprite_stretched_ext(self.sprite_nineslice, 1, 0, 0, self.width, self.height, self.color_back(), 1);
         if (sprite_exists(self.sprite)) {
-            if (self.checker_background) self.drawCheckerbox(0, 0, self.width - 1, self.height - 1);
+            if (self.checker_background) self.drawCheckerbox();
             var scale = self.allow_shrink ?
                 (self.fill ? min(self.width / sprite_get_width(self.sprite), self.height / sprite_get_height(self.sprite)) : 1) :
                 (self.fill ? min(max(self.width / sprite_get_width(self.sprite), 1), max(self.height / sprite_get_height(self.sprite), 1)) : 1);
@@ -61,5 +62,7 @@ function EmuButtonImage(x, y, w, h, sprite, index, blend, alpha, scale_to_fit, c
         var back_color = self.getMouseHover(x1, y1, x2, y2) ? self.color_hover() : (self.GetInteractive() ? self.color_back() : self.color_disabled());
         draw_surface_ext(self.surface, x1, y1, 1, 1, 0, back_color, 1);
         draw_sprite_stretched_ext(self.sprite_nineslice, 0, x1, y1, x2 - x1, y2 - y1, self.color(), 1);
+        
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
     };
 }

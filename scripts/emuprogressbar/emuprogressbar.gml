@@ -1,6 +1,6 @@
 // Emu (c) 2020 @dragonitespam
 // See the Github wiki for documentation: https://github.com/DragoniteSpam/Documentation/wiki/Emu
-function EmuProgressBar(x, y, w, h, thickness, value_min, value_max, draggable, value, callback) : EmuCallback(x, y, w, h, "progress bar", value, callback) constructor {
+function EmuProgressBar(x, y, width, height, thickness, value_min, value_max, draggable, value, callback) : EmuCallback(x, y, width, height, "progress bar", value, callback) constructor {
     /// @region
     self.thickness = thickness;
     /// @region
@@ -10,14 +10,14 @@ function EmuProgressBar(x, y, w, h, thickness, value_min, value_max, draggable, 
     /// @region
     self.draggable = draggable;
     
-    self.color_bar = function() { return EMU_COLOR_PROGRESS_BAR };
+    self.color_bar = function() { return EMU_COLOR_PROGRESS_BAR; };
     /// @region
-    self.color_back = function() { return EMU_COLOR_BACK };
+    self.color_back = function() { return EMU_COLOR_BACK; };
     
     /// @region
-    self.sprite_bar = spr_emu_progress;
+    self.sprite_bar = EMU_SPRITE_PROGRESS;
     /// @region
-    self.sprite_knob = spr_emu_knob;
+    self.sprite_knob = EMU_SPRITE_DRAG_KNOB;
     /// @region
     self.knob_scale = 2;
     
@@ -27,64 +27,61 @@ function EmuProgressBar(x, y, w, h, thickness, value_min, value_max, draggable, 
     self.dragging = false;
     
     #region mutators
-    static SetThickness = function(thickness) {
+    self.SetThickness = function(thickness) {
         self.thickness = thickness;
         return self;
     };
     
-    
-    static SetValueRange = function(value_min, value_max) {
+    self.SetValueRange = function(value_min, value_max) {
         self.value_min = value_min;
         self.value_max = value_max;
         return self;
     };
     
-    
-    static SetDraggable = function(draggable) {
+    self.SetDraggable = function(draggable) {
         self.draggable = draggable;
         return self;
     };
     
-    
-    static SetSpriteBar = function(sprite) {
+    self.SetSpriteBar = function(sprite) {
         self.sprite_bar = sprite;
         return self;
     };
     
-    
-    static SetSpriteKnob = function(sprite) {
+    self.SetSpriteKnob = function(sprite) {
         self.sprite_knob = sprite;
         return self;
     };
     
-    static SetColorBar = function(color_function) {
+    self.SetColorBar = function(color_function) {
         self.color_bar = method(self, color_function);
         return self;
     };
     
-    static SetColorBack = function(color_function) {
+    self.SetColorBack = function(color_function) {
         self.color_back = method(self, color_function);
         return self;
     };
     
-    static SetKnobScale = function(scale) {
+    self.SetKnobScale = function(scale) {
         self.knob_scale = scale;
         return self;
     };
     
-    static SetIntegersOnly = function(integers) {
+    self.SetIntegersOnly = function(integers) {
         self.integers_only = integers;
         return self;
     };
     #endregion
     
     #region other methods
-    static DrawProgress = function(index, x1, y1, x2, y2, f, c, alpha) {
+    self.DrawProgress = function(index, x1, y1, x2, y2, f, c, alpha) {
         draw_sprite_stretched_ext(self.sprite_bar, index, x1, y1, max((x2 - x1) * f, 0), y2 - y1, c, alpha);
     };
     
-    static Render = function(x, y) {
+    self.Render = function(x, y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = self.x + x;
@@ -140,6 +137,8 @@ function EmuProgressBar(x, y, w, h, thickness, value_min, value_max, draggable, 
             draw_sprite_ext(self.sprite_knob, 1, bx1 + fw, floor(mean(y1, y2)), scale, scale, 0, self.color(), 1);
             draw_sprite_ext(self.sprite_knob, 0, bx1 + fw, floor(mean(y1, y2)), scale, scale, 0, self.color(), 1);
         }
+        
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
     };
     #endregion
 }

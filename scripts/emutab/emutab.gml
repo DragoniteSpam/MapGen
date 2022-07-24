@@ -6,9 +6,9 @@ function EmuTab(name) : EmuCore(0, 0, 0, 0, name) constructor {
     
     self.sprite_nineslice = spr_emu_nineslice_tab;
     
-    self.color_hover = function() { return EMU_COLOR_HOVER };
-    self.color_back = function() { return EMU_COLOR_BACK };
-    self.color_disabled = function() { return EMU_COLOR_DISABLED };
+    self.color_hover = function() { return EMU_COLOR_HOVER; };
+    self.color_back = function() { return EMU_COLOR_BACK; };
+    self.color_disabled = function() { return EMU_COLOR_DISABLED; };
     
     self.row = 0;
     self.index = 0;
@@ -19,8 +19,9 @@ function EmuTab(name) : EmuCore(0, 0, 0, 0, name) constructor {
     
     self.override_root_check = true;
     
-    static Render = function(base_x, base_y) {
+    self.Render = function(base_x, base_y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = x + base_x;
@@ -54,24 +55,26 @@ function EmuTab(name) : EmuCore(0, 0, 0, 0, name) constructor {
             .draw(floor(mean(hx1, hx2)), floor(mean(hy1, hy2)));
         #endregion
         
+        if (debug_render) self.renderDebugBounds(hx1, hy1, hx2, hy2);
+        
         if (self.isActiveTab()) {
-            self.renderContents(x1, y1);
+            self.renderContents(x1, y1, debug_render);
         }
     };
     
     // This is NOT the same as isActiveElement() - this checks for the active
     // tab in the tab group, rather than the UI element which will respond to
     // keyboard input
-    static isActiveTab = function() {
+    self.isActiveTab = function() {
         return (self.root.active_tab == self);
     };
     
-    static RequestActivate = function() {
+    self.RequestActivate = function() {
         self.root.RequestActivateTab(self);
         return self;
     };
     
-    static GetInteractive = function() {
+    self.GetInteractive = function() {
         return self.enabled && self.interactive && self.root.isActiveDialog();
     };
 }

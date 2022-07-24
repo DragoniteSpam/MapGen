@@ -1,6 +1,6 @@
 // Emu (c) 2020 @dragonitespam
 // See the Github wiki for documentation: https://github.com/DragoniteSpam/Documentation/wiki/Emu
-function EmuRenderSurface(x, y, w, h, render, step, create) : EmuCore(x, y, w, h, "") constructor {
+function EmuRenderSurface(x, y, width, height, render, step, create) : EmuCore(x, y, width, height, "") constructor {
     /// @ignore
     self.callback_render = method(self, render);
     /// @ignore
@@ -18,31 +18,32 @@ function EmuRenderSurface(x, y, w, h, render, step, create) : EmuCore(x, y, w, h
     surface_reset_target();
     
     #region mutators
-    static SetRender = function(render) {
+    self.SetRender = function(render) {
         self.callback_render = method(self, render);
         return self;
     };
     
-    static SetStep = function(step) {
+    self.SetStep = function(step) {
         self.callback_step = method(self, step);
         return self;
     };
     
-    static SetRecreate = function(recreate) {
+    self.SetRecreate = function(recreate) {
         self.callback_recreate = method(self, recreate);
         return self;
     };
     #endregion
     
     #region accessors
-    static GetSurface = function() {
+    self.GetSurface = function() {
         return self.surface;
     };
     #endregion
     
     #region other methods
-    static Render = function(x, y) {
+    self.Render = function(x, y, debug_render = false) {
         self.gc.Clean();
+        self.update_script();
         self.processAdvancement();
         
         var x1 = self.x + x;
@@ -84,6 +85,8 @@ function EmuRenderSurface(x, y, w, h, render, step, create) : EmuCore(x, y, w, h
         surface_reset_target();
         
         draw_surface(self.surface, x1, y1);
+        
+        if (debug_render) self.renderDebugBounds(x1, y1, x2, y2);
     };
     #endregion
 }
