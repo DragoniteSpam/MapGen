@@ -36,17 +36,21 @@ self.container.AddContent([
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
     })
+        .SetList(self.locations)
+        .SetEntryTypes(E_ListEntryTypes.STRUCTS)
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
         }),
     new EmuInput(32, EMU_AUTO, ew, eh, "Name:", "", "location name", 100, E_InputTypes.STRING, function() {
+        obj_main.active_location.name = self.value;
     })
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
+            self.SetValue(obj_main.active_location.name);
         }),
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", true, function() {
         obj_main.active_location.locked = self.value;
