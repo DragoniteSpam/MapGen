@@ -11,6 +11,8 @@ self.active_location = undefined;
 self.hover_location = undefined;
 self.location_placing = false;
 
+self.refresh_list = true;
+
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
 } catch (e) {
@@ -54,7 +56,12 @@ self.container.AddContent([
         }
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
+        if (!obj_main.refresh_list) return;
+        if (!self.root) return;
+        obj_main.refresh_list = false;
         obj_main.active_location = self.GetSelectedItem();
+        self.root.Refresh();
+        obj_main.refresh_list = true;
     })
         .SetList(self.locations)
         .SetEntryTypes(E_ListEntryTypes.STRINGS)
