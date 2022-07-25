@@ -201,11 +201,16 @@ self.container.AddContent([
 
 self.Export = function(filename) {
     var output = {
+        relative: obj_main.relative_coordinates && sprite_exists(self.map_sprite),
+        full_size: {
+            w: (obj_main.relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
+            h: (obj_main.relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
+        },
         locations: array_create(array_length(self.locations)),
     };
     
-    var dwidth = 1 / ((obj_main.relative_coordinates && sprite_exists(self.map_sprite)) ? sprite_get_width(self.map_sprite) : 1);
-    var dheight = 1 / ((obj_main.relative_coordinates && sprite_exists(self.map_sprite)) ? sprite_get_height(self.map_sprite) : 1);
+    var dwidth = 1 / output.full_size.w;
+    var dheight = 1 / output.full_size.h;
     
     for (var i = 0, n = array_length(self.locations); i < n; i++) {
         self.locations[i].export_index = i;
@@ -217,7 +222,8 @@ self.Export = function(filename) {
             name: source.name,
             x: source.x * dwidth,
             y: source.y * dheight,
-            connections: array_length(variable_struct_names_count(source.connections))
+            connections: array_create(variable_struct_names_count(source.connections)),
+            locked: source.locked,
         };
         var connection_keys = variable_struct_get_names(source.connections);
         for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
