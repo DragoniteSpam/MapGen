@@ -277,3 +277,11 @@ self.Clear = function() {
     obj_main.active_location = undefined;
     obj_main.hover_location = undefined;
 };
+
+if (file_exists(GRAPH_IN_STORAGE)) {
+    try {
+        self.Import(GRAPH_IN_STORAGE);
+    } catch (e) {
+        // guess not
+    }
+}
