@@ -137,8 +137,10 @@ self.container.AddContent([
             self.map_y += my - self.pan_y;
             self.pan_x = mx;
             self.pan_y = my;
+            window_set_cursor(cr_size_all);
         } else {
             self.panning = false;
+            window_set_cursor(cr_default);
         }
         
         if (obj_main.active_location && keyboard_check_pressed(KEY_TOGGLE_LOCKED)) {
