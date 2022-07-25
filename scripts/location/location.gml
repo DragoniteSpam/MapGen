@@ -4,6 +4,9 @@ function Location(x, y) constructor {
     self.name = "Location" + string(array_length(obj_main.locations));
     self.locked = true;
     
+    // this is only set when exporting
+    self.export_index = 0;
+    
     self.connections = { };
     
     self.Move = function(x, y) {
@@ -26,6 +29,13 @@ function Location(x, y) constructor {
             variable_struct_remove(self.connections, string(ptr(dest)));
         if (variable_struct_exists(dest.connections, string(ptr(self))))
             variable_struct_remove(dest.connections, string(ptr(self)));
+    };
+    
+    self.DisconnectAll = function() {
+        var keys = variable_struct_get_names(self.connections);
+        for (var i = 0, n = array_length(keys); i < n; i++) {
+            self.connections[$ keys[i]].Disconnect(self);
+        }
     };
     
     self.RenderConnections = function(zoom, map_x, map_y) {
@@ -83,5 +93,9 @@ function Location(x, y) constructor {
         static sw = sprite_get_width(spr_location) / 2;
         static sh = sprite_get_height(spr_location) / 2;
         return mx >= self.x * zoom - sw + map_x && my >= self.y * zoom - sh + map_y && mx <= self.x * zoom + sw + map_x && my <= self.y * zoom + sh + map_y;
+    };
+    
+    self.toString = function() {
+        return (!self.locked ? "[c_aqua]" : "") + self.name;
     };
 }

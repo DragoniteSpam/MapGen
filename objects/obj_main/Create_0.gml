@@ -35,22 +35,33 @@ self.container.AddContent([
                 obj_main.map_sprite = sprite;
                 sprite_save(obj_main.map_sprite, 0, MAP_IN_STORAGE);
             } catch (e) {
+                show_debug_message("Could not load the map image:");
+                show_debug_message(e.message);
+                show_debug_message(e.longMessage);
             }
         }
     }),
     new EmuButton(32, EMU_AUTO, ew, eh, "Export JSON", function() {
+        var filename = get_save_filename("JSON files|*.json", "connections.json");
+        if (filename != "") {
+            try {
+                obj_main.Export(filename);
+            } catch (e) {
+                show_debug_message("Could not save the map data:");
+                show_debug_message(e.message);
+                show_debug_message(e.longMessage);
+            }
+        }
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
         obj_main.active_location = self.GetSelectedItem();
     })
         .SetList(self.locations)
-        .SetEntryTypes(E_ListEntryTypes.STRUCTS)
-        .SetInteractive(false)
+        .SetEntryTypes(E_ListEntryTypes.STRINGS)
         .SetRefresh(function() {
             // ::ClearSelection will erase active_location when it invokes the
             // list callback so save the original value here and use it instead
             var location = obj_main.active_location;
-            self.SetInteractive(!!location);
             if (!location) return;
             self.ClearSelection();
             self.Select(array_search(obj_main.locations, location));
@@ -93,7 +104,7 @@ self.container.AddContent([
             obj_main.locations[i].RenderPost(self.zoom, self.map_x, self.map_y, mx, my);
         }
         draw_set_alpha(0.75);
-        draw_rectangle_colour(0, 0, 640, 32, c_white, c_white, c_white, c_white, false);
+        draw_rectangle_colour(0, 0, self.width, 32, c_white, c_white, c_white, c_white, false);
         draw_set_alpha(1);
         draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
@@ -155,6 +166,12 @@ self.container.AddContent([
             self.pan_x = 0;
             self.pan_y = 0;
         }
+        if (obj_main.active_location && keyboard_check_pressed(KEY_DELETE)) {
+            obj_main.active_location.DisconnectAll();
+            array_delete(obj_main.locations, array_search(obj_main.locations, obj_main.active_location), 1);
+            obj_main.active_location = undefined;
+            obj_main.container.Refresh();
+        }
     }, function() {
         self.zoom = 1;
         self.map_x = 0;
@@ -165,3 +182,36 @@ self.container.AddContent([
     })
         .SetID("RS")
 ]);
+
+self.Export = function(filename) {
+    var output = {
+        locations: array_create(array_length(self.locations)),
+    };
+    
+    var dwidth = sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1;
+    var dheight = sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1;
+    
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        self.locations[i].export_index = i;
+    }
+    
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        var source = self.locations[i];
+        var written = {
+            name: source.name,
+            x: source.x * dwidth,
+            y: source.y * dheight,
+            connections: array_length(variable_struct_names_count(source.connections))
+        };
+        var connection_keys = variable_struct_get_names(source.connections);
+        for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
+            written.connections[j] = source.connections[$ connection_keys[j]].export_index;
+        }
+        output.locations[i] = written;
+    }
+    
+    var buffer = buffer_create(1000, buffer_grow, 1);
+    buffer_write(buffer, buffer_text, json_stringify(output));
+    buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
+    buffer_delete(buffer);
+};
