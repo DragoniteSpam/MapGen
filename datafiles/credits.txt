@@ -1,0 +1,9 @@
+Made by me
+
+Uses Scribble by Juju Adams:
+https://github.com/JujuAdams/scribble
+And Emu for the UI, also by me:
+https://dragonite.itch.io/emu
+
+Program icon is based on
+Map by Andi Nur Abdillah from NounProject.com
