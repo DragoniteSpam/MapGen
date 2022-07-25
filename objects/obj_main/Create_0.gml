@@ -69,7 +69,7 @@ self.container.AddContent([
         }
     }),
     new EmuButton(32, EMU_AUTO, ew, eh, "Clear", function() {
-        self.Clear();
+        obj_main.Clear();
     }),
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates", self.relative_coordinates, function() {
         obj_main.relative_coordinates = self.value;
