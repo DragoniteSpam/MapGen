@@ -121,23 +121,26 @@ self.container.AddContent([
         draw_set_alpha(1);
         draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
-        if (mouse_wheel_down()) {
-            var cx = (mx - self.map_x) / self.zoom;
-            var cy = (my - self.map_y) / self.zoom;
-            self.zoom = max(0.25, self.zoom - 0.125);
-            self.map_x = mx - self.zoom * cx;
-            self.map_y = my - self.zoom * cy;
-        } else if (mouse_wheel_up()) {
-            var cx = (mx - self.map_x) / self.zoom;
-            var cy = (my - self.map_y) / self.zoom;
-            self.zoom = min(4.00, self.zoom + 0.125);
-            self.map_x = mx - self.zoom * cx;
-            self.map_y = my - self.zoom * cy;
+        var mouse_in_view = (mx >= 0 && mx <= self.width && my >= 0 && my <= self.width);
+        if (mouse_in_view) {
+            if (mouse_wheel_down()) {
+                var cx = (mx - self.map_x) / self.zoom;
+                var cy = (my - self.map_y) / self.zoom;
+                self.zoom = max(0.25, self.zoom - 0.125);
+                self.map_x = mx - self.zoom * cx;
+                self.map_y = my - self.zoom * cy;
+            } else if (mouse_wheel_up()) {
+                var cx = (mx - self.map_x) / self.zoom;
+                var cy = (my - self.map_y) / self.zoom;
+                self.zoom = min(4.00, self.zoom + 0.125);
+                self.map_x = mx - self.zoom * cx;
+                self.map_y = my - self.zoom * cy;
+            }
         }
         var spacing = 1;
         var cmx = ((mx - self.map_x) div spacing) * spacing / self.zoom;
         var cmy = ((my - self.map_y) div spacing) * spacing / self.zoom;
-        if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.width && mouse_check_button_pressed(mb_left)) {
+        if (mouse_in_view && mouse_check_button_pressed(mb_left)) {
             if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
                 var location = new Location(cmx, cmy);
                 array_push(obj_main.locations, location);
@@ -151,7 +154,7 @@ self.container.AddContent([
         } else {
             obj_main.location_placing = false;
         }
-        if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.height && mouse_check_button_pressed(mb_middle)) {
+        if (mouse_in_view && mouse_check_button_pressed(mb_middle)) {
             self.panning = true;
             self.pan_x = mx;
             self.pan_y = my;
