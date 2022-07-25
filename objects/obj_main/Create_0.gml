@@ -95,7 +95,7 @@ self.container.AddContent([
         draw_set_alpha(0.75);
         draw_rectangle_colour(0, 0, 640, 32, c_white, c_white, c_white, c_white, false);
         draw_set_alpha(1);
-        draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations", c_black, c_black, c_black, c_black, 1);
+        draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
         if (mouse_wheel_down()) {
             var cx = (mx - self.map_x) / self.zoom;
@@ -146,6 +146,14 @@ self.container.AddContent([
         if (obj_main.active_location && keyboard_check_pressed(KEY_TOGGLE_LOCKED)) {
             obj_main.active_location.locked = !obj_main.active_location.locked;
             obj_main.container.GetChild("LOCK").Refresh();
+        }
+        if (keyboard_check_pressed(KEY_RESET_MAP)) {
+            self.zoom = 1;
+            self.map_x = 0;
+            self.map_y = 0;
+            self.panning = false;
+            self.pan_x = 0;
+            self.pan_y = 0;
         }
     }, function() {
         self.zoom = 1;

@@ -7,3 +7,4 @@ function array_search(array, item) {
 
 #macro MAP_IN_STORAGE       "map.png"
 #macro KEY_TOGGLE_LOCKED    vk_f2
+#macro KEY_RESET_MAP        vk_enter
