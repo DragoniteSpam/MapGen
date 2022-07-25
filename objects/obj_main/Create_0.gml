@@ -98,9 +98,17 @@ self.container.AddContent([
         draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations", c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
         if (mouse_wheel_down()) {
+            var cx = (mx - self.map_x) / self.zoom;
+            var cy = (my - self.map_y) / self.zoom;
             self.zoom = max(0.25, self.zoom - 0.125);
+            self.map_x = mx - self.zoom * cx;
+            self.map_y = my - self.zoom * cy;
         } else if (mouse_wheel_up()) {
+            var cx = (mx - self.map_x) / self.zoom;
+            var cy = (my - self.map_y) / self.zoom;
             self.zoom = min(4.00, self.zoom + 0.125);
+            self.map_x = mx - self.zoom * cx;
+            self.map_y = my - self.zoom * cy;
         }
         var spacing = 1;
         var cmx = ((mx - self.map_x) div spacing) * spacing / self.zoom;
