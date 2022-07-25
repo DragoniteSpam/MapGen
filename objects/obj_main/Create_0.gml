@@ -64,6 +64,7 @@ self.container.AddContent([
         obj_main.refresh_list = true;
     })
         .SetList(self.locations)
+        .SetNumbered(true)
         .SetEntryTypes(E_ListEntryTypes.STRINGS)
         .SetRefresh(function() {
             // ::ClearSelection will erase active_location when it invokes the
