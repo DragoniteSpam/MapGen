@@ -44,7 +44,7 @@ self.container.AddContent([
             }
         }
     }),
-    new EmuButton(32, EMU_AUTO, ew, eh, "Export JSON", function() {
+    new EmuButton(32, EMU_AUTO, ew / 2, eh, "Save", function() {
         var filename = get_save_filename("JSON files|*.json", "connections.json");
         if (filename != "") {
             try {
@@ -56,10 +56,20 @@ self.container.AddContent([
             }
         }
     }),
+    new EmuButton(32 + ew / 2, EMU_INLINE, ew / 2, eh, "Load", function() {
+        var filename = get_open_filename("JSON files|*.json", "connections.json");
+        if (filename != "") {
+            try {
+                obj_main.Import(filename);
+            } catch (e) {
+                show_debug_message("Could not load the map data:");
+                show_debug_message(e.message);
+                show_debug_message(e.longMessage);
+            }
+        }
+    }),
     new EmuButton(32, EMU_AUTO, ew, eh, "Clear", function() {
-        array_resize(obj_main.locations, 0);
-        obj_main.active_location = undefined;
-        obj_main.hover_location = undefined;
+        self.Clear();
     }),
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates", self.relative_coordinates, function() {
         obj_main.relative_coordinates = self.value;
@@ -240,4 +250,30 @@ self.Export = function(filename) {
     buffer_write(buffer, buffer_text, json_stringify(output));
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
+};
+
+self.Import = function(filename) {
+    var buffer = buffer_load(filename);
+    var data = json_parse(buffer_read(buffer, buffer_text));
+    buffer_delete(buffer);
+    
+    self.Clear();
+    for (var i = 0, n = array_length(data.locations); i < n; i++) {
+        var source = data.locations[i];
+        var location = new Location(source.x * data.full_size.w, source.y * data.full_size.h);
+        location.name = source.name;
+        location.locked = source.locked;
+        array_push(self.locations, location);
+    }
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        for (var j = 0, n2 = array_length(data.locations[i].connections); j < n2; j++) {
+            self.locations[i].Connect(self.locations[data.locations[i].connections[j]]);
+        }
+    }
+};
+
+self.Clear = function() {
+    array_resize(obj_main.locations, 0);
+    obj_main.active_location = undefined;
+    obj_main.hover_location = undefined;
 };
