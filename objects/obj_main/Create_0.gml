@@ -11,6 +11,8 @@ self.active_location = undefined;
 self.hover_location = undefined;
 self.location_placing = false;
 
+self.relative_coordinates = true;
+
 self.refresh_list = true;
 
 try {
@@ -54,6 +56,9 @@ self.container.AddContent([
                 show_debug_message(e.longMessage);
             }
         }
+    }),
+    new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates", self.relative_coordinates, function() {
+        obj_main.relative_coordinates = self.value;
     }),
     new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
         if (!obj_main.refresh_list) return;
@@ -196,8 +201,8 @@ self.Export = function(filename) {
         locations: array_create(array_length(self.locations)),
     };
     
-    var dwidth = sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1;
-    var dheight = sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1;
+    var dwidth = 1 / ((obj_main.relative_coordinates && sprite_exists(self.map_sprite)) ? sprite_get_width(self.map_sprite) : 1);
+    var dheight = 1 / ((obj_main.relative_coordinates && sprite_exists(self.map_sprite)) ? sprite_get_height(self.map_sprite) : 1);
     
     for (var i = 0, n = array_length(self.locations); i < n; i++) {
         self.locations[i].export_index = i;
