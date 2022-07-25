@@ -57,6 +57,11 @@ self.container.AddContent([
             }
         }
     }),
+    new EmuButton(32, EMU_AUTO, ew, eh, "Clear", function() {
+        array_resize(obj_main.locations, 0);
+        obj_main.active_location = undefined;
+        obj_main.hover_location = undefined;
+    }),
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates", self.relative_coordinates, function() {
         obj_main.relative_coordinates = self.value;
     }),
