@@ -27,7 +27,6 @@ self.SetActiveLocation = function(location) {
 };
 
 self.container.AddContent([
-    new EmuText(32, EMU_BASE, ew, eh, "[c_aqua]MapGen"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Import Image", function() {
         var path = get_open_filename("Image files|*.png;*.bmp;*.jpg;*.jpeg", "map.png");
         if (file_exists(path)) {
