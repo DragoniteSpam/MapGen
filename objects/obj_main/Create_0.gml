@@ -108,7 +108,7 @@ self.container.AddContent([
             self.SetValue(obj_main.active_location.name);
         }),
     new EmuButton(32, EMU_AUTO, ew, eh, "More...", function() {
-        var dialog = new EmuDialog(560, 320, "More settings...");
+        var dialog = new EmuDialog(560, 320, "More settings: " + string(obj_main.active_location.name));
         var ew = dialog.width - 64;
         var eh = 32;
         // if you double-click the list the "close" button might spawn on top of the list
