@@ -10,3 +10,4 @@ function array_search(array, item) {
 #macro KEY_TOGGLE_LOCKED    vk_f2
 #macro KEY_RESET_MAP        vk_enter
 #macro KEY_DELETE           vk_delete
+#macro KEY_DELETE_ALT       vk_backspace

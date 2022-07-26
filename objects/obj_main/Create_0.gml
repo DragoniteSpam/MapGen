@@ -198,7 +198,7 @@ self.container.AddContent([
             self.pan_x = 0;
             self.pan_y = 0;
         }
-        if (obj_main.active_location && keyboard_check_pressed(KEY_DELETE)) {
+        if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
             obj_main.active_location.DisconnectAll();
             array_delete(obj_main.locations, array_search(obj_main.locations, obj_main.active_location), 1);
             obj_main.active_location = undefined;
