@@ -94,7 +94,9 @@ self.container.AddContent([
             self.Select(array_search(obj_main.locations, location));
         }),
     new EmuInput(32, EMU_AUTO, ew, eh, "Name:", "", "location name", 100, E_InputTypes.STRING, function() {
-        obj_main.active_location.name = self.value;
+        if (obj_main.active_location) {
+            obj_main.active_location.name = self.value;
+        }
     })
         .SetInteractive(false)
         .SetRefresh(function() {
