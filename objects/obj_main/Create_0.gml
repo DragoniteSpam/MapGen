@@ -82,6 +82,9 @@ self.container.AddContent([
         self.root.Refresh();
         obj_main.refresh_list = true;
     })
+        .SetCallbackDouble(function() {
+            self.GetSibling("MORE").callback();
+        })
         .SetList(self.locations)
         .SetNumbered(true)
         .SetEntryTypes(E_ListEntryTypes.STRINGS)
@@ -104,16 +107,25 @@ self.container.AddContent([
             if (!obj_main.active_location) return;
             self.SetValue(obj_main.active_location.name);
         }),
-    new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", true, function() {
-        obj_main.active_location.locked = self.value;
+    new EmuButton(32, EMU_AUTO, ew, eh, "More...", function() {
+        var ew = 320;
+        var eh = 32;
+        var dialog = new EmuDialog(480, 320, "More settings...").AddContent([
+            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", obj_main.active_location.locked, function() {
+                obj_main.active_location.locked = self.value;
+            })
+                .SetID("LOCK"),
+        ]).AddDefaultCloseButton();
+        // if you double-click the list the "close" button might spawn on top of the list
+        dialog.x += 240;
+        return dialog;
     })
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
-            self.value = obj_main.active_location.locked;
         })
-        .SetID("LOCK"),
+        .SetID("MORE"),
     new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 960, 720, function(mx, my) {
         draw_clear(c_black);
         if (sprite_exists(obj_main.map_sprite)) {
