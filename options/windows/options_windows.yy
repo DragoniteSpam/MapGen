@@ -1,7 +1,7 @@
 {
   "option_windows_display_name": "MapGen",
   "option_windows_executable_name": "${project_name}.exe",
-  "option_windows_version": "1.0.0.0",
+  "option_windows_version": "1.1.0.0",
   "option_windows_company_info": "Michael the Wizardragon",
   "option_windows_product_info": "MapGen",
   "option_windows_copyright_info": "2022 Michael the Wizardragon",
