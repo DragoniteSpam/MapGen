@@ -108,16 +108,27 @@ self.container.AddContent([
             self.SetValue(obj_main.active_location.name);
         }),
     new EmuButton(32, EMU_AUTO, ew, eh, "More...", function() {
-        var ew = 320;
+        var dialog = new EmuDialog(560, 320, "More settings...");
+        var ew = dialog.width - 64;
         var eh = 32;
-        var dialog = new EmuDialog(480, 320, "More settings...").AddContent([
+        // if you double-click the list the "close" button might spawn on top of the list
+        dialog.x += 240;
+        dialog.AddContent([
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", obj_main.active_location.locked, function() {
                 obj_main.active_location.locked = self.value;
             })
                 .SetID("LOCK"),
+            new EmuInput(32, EMU_AUTO, ew, eh, "Description:", obj_main.active_location.summary, "A brief description of the location", 250, E_InputTypes.STRING, function() {
+                obj_main.active_location.summary = self.value;
+            })
+                .SetInputBoxPosition(160, 0)
+                .SetID("SUMMARY"),
+            new EmuInput(32, EMU_AUTO, ew, eh, "Category:", obj_main.active_location.category, "The category that the location belongs in", 250, E_InputTypes.STRING, function() {
+                obj_main.active_location.category = self.value;
+            })
+                .SetInputBoxPosition(160, 0)
+                .SetID("CATEGORY"),
         ]).AddDefaultCloseButton();
-        // if you double-click the list the "close" button might spawn on top of the list
-        dialog.x += 240;
         return dialog;
     })
         .SetInteractive(false)

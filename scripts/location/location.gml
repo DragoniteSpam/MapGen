@@ -3,6 +3,8 @@ function Location(x, y) constructor {
     self.y = y;
     self.name = "Location" + string(array_length(obj_main.locations));
     self.locked = true;
+    self.summary = "";
+    self.category = "default category";
     
     // this is only set when exporting
     self.export_index = 0;
