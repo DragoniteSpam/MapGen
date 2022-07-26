@@ -264,6 +264,8 @@ self.Export = function(filename) {
             y: source.y * dheight,
             connections: array_create(variable_struct_names_count(source.connections)),
             locked: source.locked,
+            summary: source.summary,
+            category: source.category,
         };
         var connection_keys = variable_struct_get_names(source.connections);
         for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
@@ -276,6 +278,8 @@ self.Export = function(filename) {
     buffer_write(buffer, buffer_text, json_stringify(output));
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
+    
+    show_debug_message("saved")
 };
 
 self.Import = function(filename) {
@@ -289,6 +293,8 @@ self.Import = function(filename) {
         var location = new Location(source.x * data.full_size.w, source.y * data.full_size.h);
         location.name = source.name;
         location.locked = source.locked;
+        location.summary = source[$ "summary"] ?? location.summary;
+        location.category = source[$ "category"] ?? location.category;
         array_push(self.locations, location);
     }
     for (var i = 0, n = array_length(self.locations); i < n; i++) {
