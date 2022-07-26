@@ -160,6 +160,7 @@ self.container.AddContent([
         draw_set_alpha(1);
         draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
+        if (!self.isActiveDialog()) return;
         var mouse_in_view = (mx >= 0 && mx <= self.width && my >= 0 && my <= self.width);
         if (mouse_in_view) {
             if (mouse_wheel_down()) {
