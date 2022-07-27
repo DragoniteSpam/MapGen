@@ -3,8 +3,8 @@ function Location(x, y) constructor {
     self.y = y;
     self.name = "Location" + string(array_length(obj_main.locations));
     self.locked = true;
-    self.summary = "a brief summary of the location";
-    self.category = "default category";
+    self.summary = "";
+    self.category = "";
     
     // this is only set when exporting
     self.export_index = 0;
@@ -98,6 +98,6 @@ function Location(x, y) constructor {
     };
     
     self.toString = function() {
-        return (!self.locked ? "[c_aqua]" : "") + self.name;
+        return (!self.locked ? "[c_aqua]" : "") + (self.summary != "" ? "*" : "") + self.name + (self.category != "" ? (" [c_gray](" + self.category + ")") : "");
     };
 }
