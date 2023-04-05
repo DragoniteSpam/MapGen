@@ -15,6 +15,12 @@ self.relative_coordinates = true;
 
 self.refresh_list = true;
 
+self.settings = {
+    export_names: true,
+    export_summaries: true,
+    export_categories: true,
+};
+
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
 } catch (e) {
@@ -74,7 +80,7 @@ self.container.AddContent([
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates", self.relative_coordinates, function() {
         obj_main.relative_coordinates = self.value;
     }),
-    new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
+    new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 10, function() {
         if (!obj_main.refresh_list) return;
         if (!self.root) return;
         obj_main.refresh_list = false;
@@ -125,6 +131,33 @@ self.container.AddContent([
                 .SetID("SUMMARY"),
             new EmuInput(32, EMU_AUTO, ew, eh, "Category:", obj_main.active_location.category, "The category that the location belongs in", 250, E_InputTypes.STRING, function() {
                 obj_main.active_location.category = self.value;
+            })
+                .SetInputBoxPosition(160, 0)
+                .SetID("CATEGORY"),
+        ]).AddDefaultCloseButton();
+        return dialog;
+    })
+        .SetInteractive(false)
+        .SetRefresh(function() {
+            self.SetInteractive(!!obj_main.active_location);
+            if (!obj_main.active_location) return;
+        })
+        .SetID("MORE"),
+    new EmuButton(32, EMU_AUTO, ew, eh, "Options", function() {
+        var dialog = new EmuDialog(560, 320, "MapGen Options");
+        var ew = dialog.width - 64;
+        var eh = 32;
+        dialog.AddContent([
+            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
+                obj_main.settings.export_names = self.value;
+            })
+                .SetID("NAMES"),
+            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
+                obj_main.settings.export_summaries = self.value;
+            })
+                .SetID("SUMMARIES"),
+            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
+                obj_main.settings.export_categories = self.value;
             })
                 .SetInputBoxPosition(160, 0)
                 .SetID("CATEGORY"),
