@@ -38,6 +38,53 @@ try {
     show_debug_message("Couldn't load the settings file: {0}", e.message);
 }
 
+self.ShowSaveDialog = function() {
+    var filename = get_save_filename("Any valid connection files|*.json;*.con|JSON files|*.json|Binary Map Connection files|*.con", "connections.json");
+    try {
+        switch (filename_ext(filename))  {
+            case ".json":
+                obj_main.Export(filename);
+                break;
+            case ".connection":
+                obj_main.ExportBin(filename);
+                break;
+        }
+    } catch (e) {
+        show_debug_message("Could not save the map data: {0}", e.message);
+        show_debug_message(e.longMessage);
+    }
+};
+
+self.ShowLoadDialog = function() {
+    var filename = get_open_filename("JSON files|*.json", "connections.json");
+    if (filename != "") {
+        try {
+            obj_main.Import(filename);
+        } catch (e) {
+            show_debug_message("Could not load the map data: {0}", e.message);
+            show_debug_message(e.longMessage);
+        }
+    }
+};
+
+self.ShowImportImageDialog = function() {
+    var path = get_open_filename("Image files|*.png;*.bmp;*.jpg;*.jpeg", "map.png");
+    if (file_exists(path)) {
+        try {
+            var sprite = sprite_add(path, 0, false, false, 0, 0);
+            if (sprite_exists(obj_main.map_sprite)) {
+                sprite_delete(obj_main.map_sprite);
+            }
+            obj_main.map_sprite = sprite;
+            sprite_save(obj_main.map_sprite, 0, MAP_IN_STORAGE);
+        } catch (e) {
+            show_debug_message("Could not load the map image:");
+            show_debug_message(e.message);
+            show_debug_message(e.longMessage);
+        }
+    }
+};
+
 self.SaveSettings = function() {
     try {
         var json = json_stringify(self.settings);
@@ -57,50 +104,9 @@ self.SetActiveLocation = function(location) {
 };
 
 self.container.AddContent([
-    new EmuButton(32, EMU_AUTO, ew, eh, "Import Image", function() {
-        var path = get_open_filename("Image files|*.png;*.bmp;*.jpg;*.jpeg", "map.png");
-        if (file_exists(path)) {
-            try {
-                var sprite = sprite_add(path, 0, false, false, 0, 0);
-                if (sprite_exists(obj_main.map_sprite)) {
-                    sprite_delete(obj_main.map_sprite);
-                }
-                obj_main.map_sprite = sprite;
-                sprite_save(obj_main.map_sprite, 0, MAP_IN_STORAGE);
-            } catch (e) {
-                show_debug_message("Could not load the map image:");
-                show_debug_message(e.message);
-                show_debug_message(e.longMessage);
-            }
-        }
-    }),
-    new EmuButton(32, EMU_AUTO, ew / 2, eh, "Save", function() {
-        var filename = get_save_filename("Any valid connection files|*.json;*.con|JSON files|*.json|Binary Map Connection files|*.con", "connections.json");
-        try {
-            switch (filename_ext(filename))  {
-                case ".json":
-                    obj_main.Export(filename);
-                    break;
-                case ".connection":
-                    obj_main.ExportBin(filename);
-                    break;
-            }
-        } catch (e) {
-            show_debug_message("Could not save the map data: {0}", e.message);
-            show_debug_message(e.longMessage);
-        }
-    }),
-    new EmuButton(32 + ew / 2, EMU_INLINE, ew / 2, eh, "Load", function() {
-        var filename = get_open_filename("JSON files|*.json", "connections.json");
-        if (filename != "") {
-            try {
-                obj_main.Import(filename);
-            } catch (e) {
-                show_debug_message("Could not load the map data: {0}", e.message);
-                show_debug_message(e.longMessage);
-            }
-        }
-    }),
+    new EmuButton(32, EMU_AUTO, ew, eh, "Import Image", self.ShowImportImageDialog),
+    new EmuButton(32, EMU_AUTO, ew / 2, eh, "Save", self.ShowSaveDialog),
+    new EmuButton(32 + ew / 2, EMU_INLINE, ew / 2, eh, "Load", self.ShowLoadDialog),
     new EmuButton(32, EMU_AUTO, ew, eh, "Clear", function() {
         obj_main.Clear();
     }),
