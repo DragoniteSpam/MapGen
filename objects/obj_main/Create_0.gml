@@ -306,6 +306,7 @@ self.Export = function(filename) {
             h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
         locations: array_create(array_length(self.locations)),
+        settings: obj_main.settings,
     };
     
     var dwidth = 1 / output.full_size.w;
@@ -318,14 +319,19 @@ self.Export = function(filename) {
     for (var i = 0, n = array_length(self.locations); i < n; i++) {
         var source = self.locations[i];
         var written = {
-            name: source.name,
             x: source.x * dwidth,
             y: source.y * dheight,
-            connections: array_create(variable_struct_names_count(source.connections)),
             locked: source.locked,
-            summary: source.summary,
-            category: source.category,
+            connections: array_create(variable_struct_names_count(source.connections)),
         };
+        
+        if (output.settings.export_names)
+            written.name = source.name;
+        if (output.settings.export_summaries)
+            written.summary = source.summary;
+        if (output.settings.export_categories)
+            written.category = source.category;
+        
         var connection_keys = variable_struct_get_names(source.connections);
         for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
             written.connections[j] = source.connections[$ connection_keys[j]].export_index;
