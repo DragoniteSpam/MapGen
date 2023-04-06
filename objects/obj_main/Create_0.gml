@@ -24,7 +24,29 @@ self.settings = {
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
 } catch (e) {
+    show_debug_message("Couldn't load the stashed map file: {0}", e.message);
 }
+
+try {
+    var buffer = buffer_load(SETTINGS_FILE);
+    var json = buffer_read(buffer, buffer_text);
+    self.settings = json_parse(json)l
+    buffer_delete(buffer);
+} catch (e) {
+    show_debug_message("Couldn't load the settings file: {0}", e.message);
+}
+
+self.SaveSettings = function() {
+    try {
+        var json = json_stringify(self.settings);
+        var buffer = buffer_create(string_byte_length(json), buffer_fixed, 1);
+        buffer_write(buffer, buffer_text, json);
+        buffer_save_ext(buffer, SETTINGS_FILE, 0, buffer_tell(buffer));
+        buffer_delete(buffer);
+    } catch (e) {
+        show_debug_message("Couldn't save the settings file: {0}", e.message);
+    }
+};
 
 self.SetActiveLocation = function(location) {
     self.active_location = location;
@@ -150,14 +172,17 @@ self.container.AddContent([
         dialog.AddContent([
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
                 obj_main.settings.export_names = self.value;
+                obj_main.SaveSettings();
             })
                 .SetID("NAMES"),
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
                 obj_main.settings.export_summaries = self.value;
+                obj_main.SaveSettings();
             })
                 .SetID("SUMMARIES"),
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
                 obj_main.settings.export_categories = self.value;
+                obj_main.SaveSettings();
             })
                 .SetInputBoxPosition(160, 0)
                 .SetID("CATEGORY"),
