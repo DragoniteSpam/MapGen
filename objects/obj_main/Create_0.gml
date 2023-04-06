@@ -344,7 +344,7 @@ self.Export = function(filename) {
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
     
-    show_debug_message("saved")
+    show_debug_message("Saved json output")
 };
 
 self.ExportBin = function(filename) {
@@ -410,7 +410,7 @@ self.ExportBin = function(filename) {
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
     
-    show_debug_message("saved")
+    show_debug_message("Saved binary output")
 };
 
 self.Import = function(filename) {
