@@ -410,8 +410,8 @@ self.ExportBin = function(filename) {
     var buffer = buffer_create(1000, buffer_grow, 1);
     
     buffer_write(buffer, buffer_string, json_stringify(header));
-    for (var i = 0, n = array_length(locations); i < n; i++) {
-        var location = locations[i];
+    for (var i = 0, n = array_length(output_locations); i < n; i++) {
+        var location = output_locations[i];
         buffer_write(buffer, buffer_f64, location.x);
         buffer_write(buffer, buffer_f64, location.y);
         buffer_write(buffer, buffer_bool, location.locked);
