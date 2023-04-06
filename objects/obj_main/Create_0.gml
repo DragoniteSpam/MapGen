@@ -445,6 +445,6 @@ if (file_exists(GRAPH_IN_STORAGE)) {
     try {
         self.Import(GRAPH_IN_STORAGE);
     } catch (e) {
-        // guess not
+        show_debug_message("Couldn't load the autosaved map: {0}", e.message);
     }
 }
