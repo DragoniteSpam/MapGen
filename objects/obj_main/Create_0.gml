@@ -1,5 +1,10 @@
 self.container = new EmuCore(0, 0, window_get_width(), window_get_height());
 
+enum EMapModes {
+    DEFAULT,
+    NAVMESH,
+}
+
 var ew = 320;
 var eh = 32;
 
@@ -14,11 +19,15 @@ self.location_placing = false;
 self.refresh_list = true;
 
 self.settings = {
+    map_mode: EMapModes.DEFAULT,
+    
     export_relative_coordinates: true,
     export_names: true,
     export_summaries: true,
     export_categories: true,
 };
+
+self.navmesh = new Navmesh();
 
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
@@ -261,19 +270,31 @@ self.container.AddContent([
         var spacing = 1;
         var cmx = ((mx - self.map_x) div spacing) * spacing / self.zoom;
         var cmy = ((my - self.map_y) div spacing) * spacing / self.zoom;
-        if (mouse_in_view && mouse_check_button_pressed(mb_left)) {
-            if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
-                var location = new Location(cmx, cmy);
-                array_push(obj_main.locations, location);
-                obj_main.SetActiveLocation(location);
-            }
-        }
-        if (mouse_check_button(mb_left)) {
-            if (obj_main.active_location && obj_main.location_placing) {
-                obj_main.active_location.Move(cmx, cmy);
-            }
-        } else {
-            obj_main.location_placing = false;
+        
+        switch (obj_main.settings.map_mode) {
+            case EMapModes.DEFAULT:
+                if (mouse_in_view && mouse_check_button_pressed(mb_left)) {
+                    if (!obj_main.hover_location && (!obj_main.active_location || (obj_main.active_location && !obj_main.active_location.MouseIsOver(self.zoom, self.map_x, self.map_y, mx, my)))) {
+                        var location = new Location(cmx, cmy);
+                        array_push(obj_main.locations, location);
+                        obj_main.SetActiveLocation(location);
+                    }
+                }
+                if (mouse_check_button(mb_left)) {
+                    if (obj_main.active_location && obj_main.location_placing) {
+                        obj_main.active_location.Move(cmx, cmy);
+                    }
+                } else {
+                    obj_main.location_placing = false;
+                }
+                break;
+            case EMapModes.NAVMESH:
+                if (mouse_check_button(mb_left)) {
+                    if (obj_main.active_location) {
+                        
+                    }
+                }
+                break;
         }
         if (mouse_in_view && mouse_check_button_pressed(mb_middle)) {
             self.panning = true;
@@ -468,6 +489,7 @@ self.Import = function(filename) {
 };
 
 self.Clear = function() {
+    self.navmesh = new Navmesh();
     array_resize(obj_main.locations, 0);
     obj_main.active_location = undefined;
     obj_main.hover_location = undefined;
