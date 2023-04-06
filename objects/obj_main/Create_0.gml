@@ -75,15 +75,19 @@ self.container.AddContent([
         }
     }),
     new EmuButton(32, EMU_AUTO, ew / 2, eh, "Save", function() {
-        var filename = get_save_filename("JSON files|*.json", "connections.json");
-        if (filename != "") {
-            try {
-                obj_main.Export(filename);
-            } catch (e) {
-                show_debug_message("Could not save the map data:");
-                show_debug_message(e.message);
-                show_debug_message(e.longMessage);
+        var filename = get_save_filename("Any valid connection files|*.json;*.con|JSON files|*.json|Binary Map Connection files|*.con", "connections.json");
+        try {
+            switch (filename_ext(filename))  {
+                case ".json":
+                    obj_main.Export(filename);
+                    break;
+                case ".connection":
+                    obj_main.ExportBin(filename);
+                    break;
             }
+        } catch (e) {
+            show_debug_message("Could not save the map data: {0}", e.message);
+            show_debug_message(e.longMessage);
         }
     }),
     new EmuButton(32 + ew / 2, EMU_INLINE, ew / 2, eh, "Load", function() {
@@ -92,8 +96,7 @@ self.container.AddContent([
             try {
                 obj_main.Import(filename);
             } catch (e) {
-                show_debug_message("Could not load the map data:");
-                show_debug_message(e.message);
+                show_debug_message("Could not load the map data: {0}", e.message);
                 show_debug_message(e.longMessage);
             }
         }
@@ -332,6 +335,51 @@ self.Export = function(filename) {
     
     var buffer = buffer_create(1000, buffer_grow, 1);
     buffer_write(buffer, buffer_text, json_stringify(output));
+    buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
+    buffer_delete(buffer);
+    
+    show_debug_message("saved")
+};
+
+self.ExportBin = function(filename) {
+    var header = {
+        version: 0,
+        relative: obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
+        full_size: {
+            w: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
+            h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
+        },
+    };
+    
+    var output_locations = array_create(array_length(self.locations));
+    
+    var dwidth = 1 / header.full_size.w;
+    var dheight = 1 / header.full_size.h;
+    
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        self.locations[i].export_index = i;
+    }
+    
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        var source = self.locations[i];
+        var written = {
+            name: source.name,
+            x: source.x * dwidth,
+            y: source.y * dheight,
+            connections: array_create(variable_struct_names_count(source.connections)),
+            locked: source.locked,
+            summary: source.summary,
+            category: source.category,
+        };
+        var connection_keys = variable_struct_get_names(source.connections);
+        for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
+            written.connections[j] = source.connections[$ connection_keys[j]].export_index;
+        }
+        output_locations[i] = written;
+    }
+    
+    var buffer = buffer_create(1000, buffer_grow, 1);
+    
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
     
