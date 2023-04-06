@@ -422,7 +422,7 @@ self.Import = function(filename) {
     for (var i = 0, n = array_length(data.locations); i < n; i++) {
         var source = data.locations[i];
         var location = new Location(source.x * data.full_size.w, source.y * data.full_size.h);
-        location.name = source.name;
+        location.name = source[$ "name"] ?? location.name;
         location.locked = source.locked;
         location.summary = source[$ "summary"] ?? location.summary;
         location.category = source[$ "category"] ?? location.category;
