@@ -1,1 +1,1 @@
-self.Export(GRAPH_IN_STORAGE);
+self.Export(GRAPH_IN_STORAGE, true);

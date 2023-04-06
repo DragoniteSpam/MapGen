@@ -298,7 +298,7 @@ self.container.AddContent([
         .SetID("RS")
 ]);
 
-self.Export = function(filename) {
+self.Export = function(filename, force_save_attributes = false) {
     var output = {
         relative: obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
         full_size: {
@@ -325,11 +325,11 @@ self.Export = function(filename) {
             connections: array_create(variable_struct_names_count(source.connections)),
         };
         
-        if (output.settings.export_names)
+        if (output.settings.export_names || force_save_attributes)
             written.name = source.name;
-        if (output.settings.export_summaries)
+        if (output.settings.export_summaries || force_save_attributes)
             written.summary = source.summary;
-        if (output.settings.export_categories)
+        if (output.settings.export_categories || force_save_attributes)
             written.category = source.category;
         
         var connection_keys = variable_struct_get_names(source.connections);
