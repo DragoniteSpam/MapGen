@@ -40,12 +40,6 @@ function Navmesh() constructor {
             self.Pop();
         }
     };
-    
-    self.AddVertex = function(node) {
-        if (self.HasTriangleWaiting()) {
-            self.Top().AddVertex(node);
-        }
-    };
 }
 
 function NavmeshTriangle() constructor {
