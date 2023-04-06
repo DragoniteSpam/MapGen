@@ -323,7 +323,6 @@ self.container.AddContent([
         
         if (obj_main.active_location && keyboard_check_pressed(KEY_TOGGLE_LOCKED)) {
             obj_main.active_location.locked = !obj_main.active_location.locked;
-            obj_main.container.GetChild("LOCK").Refresh();
         }
         if (keyboard_check_pressed(KEY_RESET_MAP)) {
             self.zoom = 1;
