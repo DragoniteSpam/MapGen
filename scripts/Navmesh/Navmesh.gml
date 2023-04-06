@@ -1,9 +1,11 @@
 function Navmesh() constructor {
     self.triangles = [];
+    self.relevant_triangle = undefined;
     
     self.AddTriangle = function() {
         var tri = new NavmeshTriangle();
         array_push(self.triangles, tri);
+        self.relevant_triangle = tri;
         return tri;
     };
     
@@ -40,6 +42,14 @@ function Navmesh() constructor {
             self.Pop();
         }
     };
+    
+    self.Render = function(zoom, map_x, map_y, mx, my) {
+        draw_primitive_begin(pr_trianglelist);
+        for (var i = 0, n = array_length(self.triangles); i < n; i++) {
+            self.triangles[i].Render(zoom, map_x, map_y, mx, my);
+        }
+        draw_primitive_end();
+    };
 }
 
 function NavmeshTriangle() constructor {
@@ -68,9 +78,15 @@ function NavmeshTriangle() constructor {
     };
     
     self.DeleteVertex = function(node) {
-        var index = array_get_index(self.triangles, node);
+        var index = array_get_index(self.vertices, node);
         if (index != -1) {
             array_delete(self.vertices, index, 1);
+        }
+    };
+    
+    self.Render = function(zoom, map_x, map_y, mx, my) {
+        for (var i = 0, n = array_length(self.vertices); i < n; i++) {
+            self.vertices[i].RenderNavmesh(zoom, map_x, map_y, mx, my);
         }
     };
 }

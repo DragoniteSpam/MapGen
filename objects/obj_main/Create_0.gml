@@ -232,6 +232,9 @@ self.container.AddContent([
         if (sprite_exists(obj_main.map_sprite)) {
             draw_sprite_ext(obj_main.map_sprite, 0, self.map_x, self.map_y, self.zoom, self.zoom, 0, c_white, 1);
         }
+        
+        obj_main.navmesh.Render(self.zoom, self.map_x, self.map_y, mx, my);
+        
         obj_main.hover_location = undefined;
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
             obj_main.locations[i].RenderConnections(self.zoom, self.map_x, self.map_y);
@@ -291,11 +294,24 @@ self.container.AddContent([
             case EMapModes.NAVMESH:
                 if (mouse_check_button(mb_left)) {
                     if (obj_main.active_location) {
-                        
+                        if (obj_main.navmesh.relevant_triangle) {
+                            obj_main.navmesh.relevant_triangle.AddVertex(obj_main.active_location);
+                        } else {
+                            obj_main.navmesh.AddTriangle();
+                        }
                     }
                 }
                 break;
         }
+        
+        if (keyboard_check(vk_f5)) {
+            obj_main.settings.map_mode = EMapModes.DEFAULT;
+        }
+        
+        if (keyboard_check(vk_f6)) {
+            obj_main.settings.map_mode = EMapModes.NAVMESH;
+        }
+        
         if (mouse_in_view && mouse_check_button_pressed(mb_middle)) {
             self.panning = true;
             self.pan_x = mx;
