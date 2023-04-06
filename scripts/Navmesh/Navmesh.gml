@@ -1,5 +1,4 @@
 function Navmesh() constructor {
-    self.editor_index = -1;
     self.triangles = [];
     
     self.AddTriangle = function() {
@@ -10,6 +9,27 @@ function Navmesh() constructor {
     
     self.Top = function() {
         return self.triangles[array_length(self.triangles) - 1];
+    };
+    
+    self.Pop = function() {
+        self.Delete(array_length(self.triangles) - 1);
+    };
+    
+    self.Delete = function(index) {
+        if (index >= 0 && index < array_length(self.triangles)) {
+            array_delete(self.triangles, index, 1);
+        }
+    };
+    
+    self.HasTriangleWaiting = function() {
+        var top = self.Top();
+        return !top.a || !top.b || !top.c;
+    };
+    
+    self.ExitEditorMode = function() {
+        if (self.HasTriangleWaiting()) {
+            self.Pop();
+        }
     };
 }
 
