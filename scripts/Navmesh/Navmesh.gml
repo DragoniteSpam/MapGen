@@ -105,8 +105,23 @@ function NavmeshTriangle() constructor {
     };
     
     self.Render = function(zoom, map_x, map_y, mx, my) {
+        static positions = array_create(3);
+        var cx = 0;
+        var cy = 0;
         for (var i = 0, n = array_length(self.vertices); i < n; i++) {
-            self.vertices[i].RenderNavmesh(zoom, map_x, map_y, mx, my);
+            var position = self.vertices[i].RenderNavmesh(zoom, map_x, map_y, mx, my);
+            cx += position.x;
+            cy += position.y;
+            positions[i] = position;
+        }
+        
+        if (self.IsComplete()) {
+            cx /= 3;
+            cy /= 3;
+            
+            for (var i = 0; i < 3; i++) {
+                draw_line_colour(cx, cy, positions[i].x, positions[i].y, c_navmesh_fill, c_navmesh_fill);
+            }
         }
     };
 }

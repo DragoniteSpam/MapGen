@@ -66,6 +66,7 @@ function Location(x, y) constructor {
         var xx = self.x * zoom + map_x;
         var yy = self.y * zoom + map_y;
         draw_vertex_color(xx, yy, c_navmesh_fill, c_navmesh_fill_alpha);
+        return { x: xx, y: yy };
     };
     
     self.RenderPre = function(zoom, map_x, map_y, mx, my) {
