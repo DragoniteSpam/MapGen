@@ -38,9 +38,12 @@ function Navmesh() constructor {
     };
     
     self.ExitEditorMode = function() {
-        if (self.HasTriangleWaiting()) {
-            self.Pop();
+        for (var i = array_length(self.triangles) - 1; i >= 0; i--) {
+            if (!self.triangles[i].IsComplete()) {
+                array_delete(self.triangles, i, 1);
+            }
         }
+        self.relevant_triangle = undefined;
     };
     
     self.Render = function(zoom, map_x, map_y, mx, my) {

@@ -297,10 +297,12 @@ self.container.AddContent([
         
         if (keyboard_check(vk_f5)) {
             obj_main.settings.map_mode = EMapModes.DEFAULT;
+            obj_main.navmesh.ExitEditorMode();
         }
         
         if (keyboard_check(vk_f6)) {
             obj_main.settings.map_mode = EMapModes.NAVMESH;
+            obj_main.navmesh.ExitEditorMode();
         }
         
         if (mouse_in_view && mouse_check_button_pressed(mb_middle)) {
