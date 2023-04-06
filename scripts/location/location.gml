@@ -45,10 +45,19 @@ function Location(x, y) constructor {
         var keys = variable_struct_get_names(self.connections);
         for (var i = 0, n = array_length(keys); i < n; i++) {
             var dest = self.connections[$ keys[i]];
+            var c = c_node_connection;
+            var w = NODE_CONNECTION_WIDTH;
+            
+            var navmesh_tri = obj_main.navmesh.relevant_triangle;
+            if (navmesh_tri && navmesh_tri.Contains(self) && navmesh_tri.Contains(dest)) {
+                c = c_node_connection_navmesh_active;
+                w = NODE_CONNECTION_NAVMESH_WIDTH;
+            }
+            
             draw_line_width_color(
                 self.x * zoom + map_x, self.y * zoom + map_y,
                 dest.x * zoom + map_x, dest.y * zoom + map_y,
-                2, c_blue, c_blue
+                w, c, c
             );
         }
     };
@@ -56,7 +65,7 @@ function Location(x, y) constructor {
     self.RenderNavmesh = function(zoom, map_x, map_y, mx, my) {
         var xx = self.x * zoom + map_x;
         var yy = self.y * zoom + map_y;
-        draw_vertex_color(xx, yy, c_red, 1);
+        draw_vertex_color(xx, yy, c_navmesh_fill, c_navmesh_fill_alpha);
     };
     
     self.RenderPre = function(zoom, map_x, map_y, mx, my) {

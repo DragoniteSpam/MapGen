@@ -77,10 +77,17 @@ function NavmeshTriangle() constructor {
         array_push(self.vertices, node);
     };
     
+    self.IndexOf = function(node) {
+        return array_get_index(self.vertices, node);
+    };
+    
+    self.Contains = function(node) {
+        return self.IndexOf(node) != -1;
+    };
+    
     self.DeleteVertex = function(node) {
-        var index = array_get_index(self.vertices, node);
-        if (index != -1) {
-            array_delete(self.vertices, index, 1);
+        if (self.Contains(node)) {
+            array_delete(self.vertices, self.IndexOf(node), 1);
         }
     };
     
