@@ -91,16 +91,29 @@ function Location(x, y) constructor {
         } else if (mouse_is_over) {
             draw_sprite(spr_location, 1, self.x * zoom + map_x, self.y * zoom + map_y);
             obj_main.hover_location = self;
-            if (mouse_check_button_pressed(mb_left)) {
-                if (obj_main.active_location && obj_main.active_location != self && keyboard_check(vk_control)) {
-                    if (self.IsConnected(obj_main.active_location)) {
-                        obj_main.active_location.Disconnect(self);
-                    } else {
-                        obj_main.active_location.Connect(self);
+            switch (obj_main.settings.map_mode) {
+                case EMapModes.DEFAULT:
+                    if (mouse_check_button_pressed(mb_left)) {
+                        if (obj_main.active_location && obj_main.active_location != self && keyboard_check(vk_control)) {
+                            if (self.IsConnected(obj_main.active_location)) {
+                                obj_main.active_location.Disconnect(self);
+                            } else {
+                                obj_main.active_location.Connect(self);
+                            }
+                        } else {
+                            obj_main.SetActiveLocation(self);
+                        }
                     }
-                } else {
-                    obj_main.SetActiveLocation(self);
-                }
+                    break;
+                case EMapModes.NAVMESH:
+                    if (mouse_check_button_pressed(mb_left)) {
+                        obj_main.SetActiveLocation(self);
+                        if (!obj_main.navmesh.relevant_triangle || obj_main.navmesh.relevant_triangle.IsComplete()) {
+                            obj_main.navmesh.AddTriangle();
+                        }
+                        obj_main.navmesh.relevant_triangle.AddVertex(self);
+                    }
+                    break;
             }
         } else {
             draw_sprite(spr_location, 0, self.x * zoom + map_x, self.y * zoom + map_y);

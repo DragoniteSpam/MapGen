@@ -292,15 +292,6 @@ self.container.AddContent([
                 }
                 break;
             case EMapModes.NAVMESH:
-                if (mouse_check_button(mb_left)) {
-                    if (obj_main.active_location) {
-                        if (obj_main.navmesh.relevant_triangle) {
-                            obj_main.navmesh.relevant_triangle.AddVertex(obj_main.active_location);
-                        } else {
-                            obj_main.navmesh.AddTriangle();
-                        }
-                    }
-                }
                 break;
         }
         
