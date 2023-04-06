@@ -21,6 +21,8 @@ self.refresh_list = true;
 self.settings = {
     map_mode: EMapModes.DEFAULT,
     
+    draw_navmesh_barycenters: false,
+    
     export_relative_coordinates: true,
     export_names: true,
     export_summaries: true,
@@ -42,6 +44,7 @@ try {
     self.settings.export_names = json[$ "export_names"] ?? self.settings.export_names;
     self.settings.export_summaries = json[$ "export_summaries"] ?? self.settings.export_summaries;
     self.settings.export_categories = json[$ "export_categories"] ?? self.settings.export_categories;
+    self.settings.draw_navmesh_barycenters = json[$ "draw_navmesh_barycenters"] ?? self.settings.draw_navmesh_barycenters;
     buffer_delete(buffer);
 } catch (e) {
     show_debug_message("Couldn't load the settings file: {0}", e.message);
@@ -206,23 +209,23 @@ self.container.AddContent([
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates?", obj_main.settings.export_relative_coordinates, function() {
                 obj_main.settings.export_relative_coordinates = self.value;
                 obj_main.SaveSettings();
-            })
-                .SetID("COORDINATES"),
+            }),
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
                 obj_main.settings.export_names = self.value;
                 obj_main.SaveSettings();
-            })
-                .SetID("NAMES"),
+            }),
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
                 obj_main.settings.export_summaries = self.value;
                 obj_main.SaveSettings();
-            })
-                .SetID("SUMMARIES"),
+            }),
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
                 obj_main.settings.export_categories = self.value;
                 obj_main.SaveSettings();
-            })
-                .SetID("CATEGORY"),
+            }),
+            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Draw navmesh barycenters?", obj_main.settings.draw_navmesh_barycenters, function() {
+                obj_main.settings.draw_navmesh_barycenters = self.value;
+                obj_main.SaveSettings();
+            }),
         ]).AddDefaultCloseButton();
         return dialog;
     })

@@ -115,12 +115,13 @@ function NavmeshTriangle() constructor {
             positions[i] = position;
         }
         
-        if (self.IsComplete()) {
-            cx /= 3;
-            cy /= 3;
-            
-            for (var i = 0; i < 3; i++) {
-                draw_line_colour(cx, cy, positions[i].x, positions[i].y, c_navmesh_fill, c_navmesh_fill);
+        if (obj_main.settings.draw_navmesh_barycenters) {
+            if (self.IsComplete()) {
+                cx /= 3;
+                cy /= 3;
+                for (var i = 0; i < 3; i++) {
+                    draw_line_colour(cx, cy, positions[i].x, positions[i].y, c_navmesh_fill, c_navmesh_fill);
+                }
             }
         }
     };
