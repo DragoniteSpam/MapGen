@@ -46,6 +46,16 @@ function Navmesh() constructor {
         self.relevant_triangle = undefined;
     };
     
+    self.RemoveAllNodesContaining = function(node) {
+        for (var i = array_length(self.triangles) - 1; i >= 0; i--) {
+            if (self.triangles[i].Contains(node)) {
+                if (self.relevant_triangle == self.triangles[i])
+                    self.relevant_triangle = undefined;
+                array_delete(self.triangles, i, 1);
+            }
+        }
+    };
+    
     self.Render = function(zoom, map_x, map_y, mx, my) {
         draw_primitive_begin(pr_trianglelist);
         for (var i = 0, n = array_length(self.triangles); i < n; i++) {

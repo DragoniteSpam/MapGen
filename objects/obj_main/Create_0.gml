@@ -335,6 +335,7 @@ self.container.AddContent([
         }
         if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
             obj_main.active_location.DisconnectAll();
+            obj_main.navmesh.RemoveAllNodesContaining(obj_main.active_location);
             array_delete(obj_main.locations, array_search(obj_main.locations, obj_main.active_location), 1);
             obj_main.active_location = undefined;
             obj_main.container.Refresh();
