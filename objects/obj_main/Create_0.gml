@@ -11,11 +11,10 @@ self.active_location = undefined;
 self.hover_location = undefined;
 self.location_placing = false;
 
-self.relative_coordinates = true;
-
 self.refresh_list = true;
 
 self.settings = {
+    export_relative_coordinates: true,
     export_names: true,
     export_summaries: true,
     export_categories: true,
@@ -29,8 +28,11 @@ try {
 
 try {
     var buffer = buffer_load(SETTINGS_FILE);
-    var json = buffer_read(buffer, buffer_text);
-    self.settings = json_parse(json)l
+    var json = json_parse(buffer_read(buffer, buffer_text));
+    self.settings.export_relative_coordinates = json[$ "export_relative_coordinates"] ?? self.settings.export_relative_coordinates;
+    self.settings.export_names = json[$ "export_names"] ?? self.settings.export_names;
+    self.settings.export_summaries = json[$ "export_summaries"] ?? self.settings.export_summaries;
+    self.settings.export_categories = json[$ "export_categories"] ?? self.settings.export_categories;
     buffer_delete(buffer);
 } catch (e) {
     show_debug_message("Couldn't load the settings file: {0}", e.message);
@@ -99,10 +101,7 @@ self.container.AddContent([
     new EmuButton(32, EMU_AUTO, ew, eh, "Clear", function() {
         obj_main.Clear();
     }),
-    new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates", self.relative_coordinates, function() {
-        obj_main.relative_coordinates = self.value;
-    }),
-    new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 10, function() {
+    new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
         if (!obj_main.refresh_list) return;
         if (!self.root) return;
         obj_main.refresh_list = false;
@@ -170,6 +169,11 @@ self.container.AddContent([
         var ew = dialog.width - 64;
         var eh = 32;
         dialog.AddContent([
+            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates?", obj_main.settings.export_relative_coordinates, function() {
+                obj_main.settings.export_relative_coordinates = self.value;
+                obj_main.SaveSettings();
+            })
+                .SetID("COORDINATES"),
             new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
                 obj_main.settings.export_names = self.value;
                 obj_main.SaveSettings();
@@ -184,17 +188,11 @@ self.container.AddContent([
                 obj_main.settings.export_categories = self.value;
                 obj_main.SaveSettings();
             })
-                .SetInputBoxPosition(160, 0)
                 .SetID("CATEGORY"),
         ]).AddDefaultCloseButton();
         return dialog;
     })
-        .SetInteractive(false)
-        .SetRefresh(function() {
-            self.SetInteractive(!!obj_main.active_location);
-            if (!obj_main.active_location) return;
-        })
-        .SetID("MORE"),
+        .SetID("OPTIONS"),
     new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 960, 720, function(mx, my) {
         draw_clear(c_black);
         if (sprite_exists(obj_main.map_sprite)) {
@@ -299,10 +297,10 @@ self.container.AddContent([
 
 self.Export = function(filename) {
     var output = {
-        relative: obj_main.relative_coordinates && sprite_exists(self.map_sprite),
+        relative: obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
         full_size: {
-            w: (obj_main.relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
-            h: (obj_main.relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
+            w: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
+            h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
         locations: array_create(array_length(self.locations)),
     };
