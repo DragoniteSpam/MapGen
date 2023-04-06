@@ -23,6 +23,7 @@ function Location(x, y) constructor {
     };
     
     self.IsConnected = function(dest) {
+        if (!dest) return false;
         return variable_struct_exists(self.connections, string(ptr(dest)));
     };
     
