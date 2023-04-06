@@ -39,13 +39,29 @@ try {
 }
 
 self.ShowSaveDialog = function() {
-    var filename = get_save_filename("Any valid connection files|*.json;*.con|JSON files|*.json|Binary Map Connection files|*.con", "connections.json");
+    static last_file_ext = "";
+    var save_filter = "";
+    switch (last_file_ext) {
+        case ".json":
+            save_filter = "JSON files|*.json|Binary Map Connection files|*.connection|Any valid connection files|*.json;*.connection";
+            break;
+        case ".connection":
+            save_filter = "Binary Map Connection files|*.connection|Any valid connection files|*.json;*.connection|JSON files|*.json";
+            break;
+        default:
+            save_filter = "Any valid connection files|*.json;*.connection|JSON files|*.json|Binary Map Connection files|*.connection";
+            break;
+    }
+    
+    var filename = get_save_filename(save_filter, "connections.json");
     try {
         switch (filename_ext(filename))  {
             case ".json":
+                last_file_ext = filename_ext(filename);
                 obj_main.Export(filename);
                 break;
             case ".connection":
+                last_file_ext = filename_ext(filename);
                 obj_main.ExportBin(filename);
                 break;
         }
