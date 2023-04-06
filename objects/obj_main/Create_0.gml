@@ -328,7 +328,12 @@ self.Export = function(filename, force_save_attributes = false) {
             h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
         locations: array_create(array_length(self.locations)),
-        settings: obj_main.settings,
+        settings: {
+            export_relative_coordinates: obj_main.settings.export_relative_coordinates,
+            export_names: obj_main.settings.export_names,
+            export_summaries: obj_main.settings.export_summaries,
+            export_categories: obj_main.settings.export_categories,
+        },
     };
     
     var dwidth = 1 / output.full_size.w;
@@ -377,7 +382,12 @@ self.ExportBin = function(filename) {
             w: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
             h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
-        settings: obj_main.settings,
+        settings: {
+            export_relative_coordinates: obj_main.settings.export_relative_coordinates,
+            export_names: obj_main.settings.export_names,
+            export_summaries: obj_main.settings.export_summaries,
+            export_categories: obj_main.settings.export_categories,
+        },
     };
     
     var output_locations = array_create(array_length(self.locations));
