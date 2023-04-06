@@ -349,6 +349,7 @@ self.ExportBin = function(filename) {
             w: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
             h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
+        settings: obj_main.settings,
     };
     
     var output_locations = array_create(array_length(self.locations));
@@ -379,6 +380,24 @@ self.ExportBin = function(filename) {
     }
     
     var buffer = buffer_create(1000, buffer_grow, 1);
+    
+    buffer_write(buffer, buffer_string, json_stringify(header));
+    for (var i = 0, n = array_length(locations); i < n; i++) {
+        var location = locations[i];
+        buffer_write(buffer, buffer_f64, location.x);
+        buffer_write(buffer, buffer_f64, location.y);
+        if (header.settings.export_names)
+            buffer_write(buffer, buffer_string, location.name);
+        if (header.settings.export_summaries)
+            buffer_write(buffer, buffer_string, location.summary);
+        if (header.settings.export_categories)
+            buffer_write(buffer, buffer_string, location.category);
+        
+        buffer_write(buffer, buffer_s32, array_length(location.connections));
+        for (var j = 0, n2 = array_length(location.connections); j < n2; j++) {
+            buffer_write(buffer, buffer_s32, location.connections[j]);
+        }
+    }
     
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
