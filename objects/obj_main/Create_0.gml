@@ -386,6 +386,8 @@ self.ExportBin = function(filename) {
         var location = locations[i];
         buffer_write(buffer, buffer_f64, location.x);
         buffer_write(buffer, buffer_f64, location.y);
+        buffer_write(buffer, buffer_bool, location.locked);
+        
         if (header.settings.export_names)
             buffer_write(buffer, buffer_string, location.name);
         if (header.settings.export_summaries)
