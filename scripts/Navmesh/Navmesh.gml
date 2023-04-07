@@ -93,10 +93,34 @@ function Navmesh() constructor {
     };
     
     self.SetTravelPoint = function(x, y) {
-        if (!self.travel.position)
-            self.travel.position = { x: 0, y: 0 };
+        if (!self.travel.position) {
+            self.travel.position = { x: x, y: y };
+            return;
+        }
+        
         self.travel.position.x = x;
         self.travel.position.y = y;
+        
+        var t_start = get_timer();
+        var mesh = navmesh_create();
+        var mesh_nodes = array_create(array_length(obj_main.locations));
+        
+        for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
+            mesh_nodes[i] = navmesh__add_node(mesh, obj_main.locations[i].x, obj_main.locations[i].y, 0);
+        }
+        
+        for (var i = 0, n = array_length(self.triangles); i < n; i++) {
+            var triangle = self.triangles[0];
+            var a = mesh_nodes[array_get_index(obj_main.locations, triangle.vertices[0])];
+            var b = mesh_nodes[array_get_index(obj_main.locations, triangle.vertices[1])];
+            var c = mesh_nodes[array_get_index(obj_main.locations, triangle.vertices[2])];
+            navmesh__node_add_neighbour(a, b);
+            navmesh__node_add_neighbour(b, c);
+            navmesh__node_add_neighbour(c, a);
+        }
+        show_debug_message("Navmesh creation time took {0} ms", (get_timer() - t_start) / 1000);
+        
+        navmesh_destroy(mesh);
     };
 }
 
