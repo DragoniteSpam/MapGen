@@ -293,8 +293,19 @@ self.container.AddContent([
                 } else {
                     obj_main.location_placing = false;
                 }
+                if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
+                    obj_main.active_location.DisconnectAll();
+                    obj_main.navmesh.RemoveAllNodesContaining(obj_main.active_location);
+                    array_delete(obj_main.locations, array_search(obj_main.locations, obj_main.active_location), 1);
+                    obj_main.active_location = undefined;
+                    obj_main.container.Refresh();
+                }
                 break;
             case EMapModes.NAVMESH:
+                if (obj_main.navmesh.relevant_triangle && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
+                    obj_main.navmesh.Delete(obj_main.navmesh.relevant_triangle);
+                    obj_main.navmesh.relevant_triangle = undefined;
+                }
                 break;
         }
         
@@ -334,13 +345,6 @@ self.container.AddContent([
             self.panning = false;
             self.pan_x = 0;
             self.pan_y = 0;
-        }
-        if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
-            obj_main.active_location.DisconnectAll();
-            obj_main.navmesh.RemoveAllNodesContaining(obj_main.active_location);
-            array_delete(obj_main.locations, array_search(obj_main.locations, obj_main.active_location), 1);
-            obj_main.active_location = undefined;
-            obj_main.container.Refresh();
         }
     }, function() {
         self.zoom = 1;
