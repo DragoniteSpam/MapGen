@@ -6,8 +6,8 @@ function Navmesh() constructor {
         self.relevant_triangle = triangle;
     };
     
-    self.AddTriangle = function() {
-        var tri = new NavmeshTriangle();
+    self.AddTriangle = function(a = undefined, b = undefined, c = undefined) {
+        var tri = new NavmeshTriangle(a, b, c);
         array_push(self.triangles, tri);
         self.relevant_triangle = tri;
         return tri;
@@ -72,7 +72,7 @@ function Navmesh() constructor {
     };
 }
 
-function NavmeshTriangle() constructor {
+function NavmeshTriangle(a = undefined, b = undefined, c = undefined) constructor {
     self.vertices = [];
     
     self.IsComplete = function() {
@@ -97,6 +97,10 @@ function NavmeshTriangle() constructor {
         array_push(self.vertices, node);
     };
     
+    if (a) self.AddVertex(a);
+    if (b) self.AddVertex(b);
+    if (c) self.AddVertex(c);
+    
     self.IndexOf = function(node) {
         return array_get_index(self.vertices, node);
     };
@@ -109,6 +113,31 @@ function NavmeshTriangle() constructor {
         if (self.Contains(node)) {
             array_delete(self.vertices, self.IndexOf(node), 1);
         }
+    };
+    
+    self.Subdivide = function(x, y) {
+        if (!self.IsComplete())
+            return;
+        
+        if (obj_main.navmesh.HasTriangleWaiting())
+            obj_main.navmesh.Pop();
+        
+        var a = self.vertices[0];
+        var b = self.vertices[1];
+        var c = self.vertices[2];
+        
+        var location = new Location(x, y);
+        array_push(obj_main.locations, location);
+        
+        location.Connect(a);
+        location.Connect(b);
+        location.Connect(c);
+        
+        obj_main.navmesh.AddTriangle(a, b, location);
+        obj_main.navmesh.AddTriangle(b, c, location);
+        obj_main.navmesh.AddTriangle(c, a, location);
+        
+        obj_main.navmesh.Delete(self);
     };
     
     self.Render = function(zoom, map_x, map_y, mx, my, color, alpha) {
@@ -134,7 +163,11 @@ function NavmeshTriangle() constructor {
             
             if (mouse_check_button_pressed(mb_left)) {
                 if (point_in_triangle(mx, my, positions[0].x, positions[0].y, positions[1].x, positions[1].y, positions[2].x, positions[2].y)) {
-                    obj_main.navmesh.SetRelevantTriangle(self);
+                    if (keyboard_check(vk_control)) {
+                        self.Subdivide((mx - map_x) / zoom, (my - map_y) / zoom);
+                    } else {
+                        obj_main.navmesh.SetRelevantTriangle(self);
+                    }
                 }
             }
         }
