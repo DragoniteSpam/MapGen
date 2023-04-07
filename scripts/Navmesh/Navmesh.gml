@@ -161,10 +161,13 @@ function NavmeshTriangle(a = undefined, b = undefined, c = undefined) constructo
                 }
             }
             
+            var abs_x = local_to_map_space(mx, map_x, zoom);
+            var abs_y = local_to_map_space(my, map_y, zoom);
+            
             if (mouse_check_button_pressed(mb_left)) {
                 if (point_in_triangle(mx, my, positions[0].x, positions[0].y, positions[1].x, positions[1].y, positions[2].x, positions[2].y)) {
                     if (keyboard_check(vk_control)) {
-                        self.Subdivide((mx - map_x) / zoom, (my - map_y) / zoom);
+                        self.Subdivide(abs_x, abs_y);
                     } else {
                         obj_main.navmesh.SetRelevantTriangle(self);
                     }

@@ -42,6 +42,9 @@ function Location(x, y) constructor {
     };
     
     self.RenderConnections = function(zoom, map_x, map_y) {
+        var xx = map_to_local_space(self.x, map_x, zoom);
+        var yy = map_to_local_space(self.y, map_y, zoom);
+        
         var keys = variable_struct_get_names(self.connections);
         for (var i = 0, n = array_length(keys); i < n; i++) {
             var dest = self.connections[$ keys[i]];
@@ -54,43 +57,45 @@ function Location(x, y) constructor {
                 w = NODE_CONNECTION_NAVMESH_WIDTH;
             }
             
-            draw_line_width_color(
-                self.x * zoom + map_x, self.y * zoom + map_y,
-                dest.x * zoom + map_x, dest.y * zoom + map_y,
-                w, c, c
-            );
+            var dx = map_to_local_space(dest.x, map_x, zoom);
+            var dy = map_to_local_space(dest.y, map_y, zoom);
+            
+            draw_line_width_color(xx, yy, dx, dy, w, c, c);
         }
     };
     
     self.RenderNavmesh = function(zoom, map_x, map_y, mx, my, color, alpha) {
-        var xx = self.x * zoom + map_x;
-        var yy = self.y * zoom + map_y;
+        var xx = map_to_local_space(self.x, map_x, zoom);
+        var yy = map_to_local_space(self.y, map_y, zoom);
         draw_vertex_color(xx, yy, color, alpha);
         return { x: xx, y: yy };
     };
     
     self.RenderPre = function(zoom, map_x, map_y, mx, my) {
-        var xx = self.x * zoom + map_x;
-        var yy = self.y * zoom + map_y;
+        var xx = map_to_local_space(self.x, map_x, zoom);
+        var yy = map_to_local_space(self.y, map_y, zoom);
         if (self.locked) {
             draw_sprite(spr_lock, 0, xx, yy + 20);
         }
     };
     
     self.RenderPost = function(zoom, map_x, map_y, mx, my) {
-        var xx = self.x * zoom + map_x;
-        var yy = self.y * zoom + map_y;
+        var xx = map_to_local_space(self.x, map_x, zoom);
+        var yy = map_to_local_space(self.y, map_y, zoom);
     };
     
     self.Render = function(zoom, map_x, map_y, mx, my) {
+        var xx = map_to_local_space(self.x, map_x, zoom);
+        var yy = map_to_local_space(self.y, map_y, zoom);
+        
         var mouse_is_over = self.MouseIsOver(zoom, map_x, map_y, mx, my);
         if (obj_main.active_location == self) {
-            draw_sprite(spr_location, 2, self.x * zoom + map_x, self.y * zoom + map_y);
+            draw_sprite(spr_location, 2, xx, yy);
             if (mouse_is_over && mouse_check_button_pressed(mb_left)) {
                 obj_main.location_placing = true;
             }
         } else if (mouse_is_over) {
-            draw_sprite(spr_location, 1, self.x * zoom + map_x, self.y * zoom + map_y);
+            draw_sprite(spr_location, 1, xx, yy);
             obj_main.hover_location = self;
             switch (obj_main.settings.map_mode) {
                 case EMapModes.DEFAULT:
@@ -117,14 +122,16 @@ function Location(x, y) constructor {
                     break;
             }
         } else {
-            draw_sprite(spr_location, 0, self.x * zoom + map_x, self.y * zoom + map_y);
+            draw_sprite(spr_location, 0, xx, yy);
         }
     };
     
     self.MouseIsOver = function(zoom, map_x, map_y, mx, my) {
         static sw = sprite_get_width(spr_location) / 2;
         static sh = sprite_get_height(spr_location) / 2;
-        return mx >= self.x * zoom - sw + map_x && my >= self.y * zoom - sh + map_y && mx <= self.x * zoom + sw + map_x && my <= self.y * zoom + sh + map_y;
+        var xx = map_to_local_space(self.x, map_x, zoom);
+        var yy = map_to_local_space(self.y, map_y, zoom);
+        return mx >= xx - sw && my >= yy - sh && mx <= xx + sw && my <= yy + sh;
     };
     
     self.toString = function() {

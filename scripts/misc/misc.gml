@@ -21,3 +21,11 @@ function array_search(array, item) {
 #macro c_node_connection_navmesh_active #ff0066
 #macro NODE_CONNECTION_WIDTH            2
 #macro NODE_CONNECTION_NAVMESH_WIDTH    4
+
+function local_to_map_space(coord, map_offset, zoom) {
+    return (coord - map_offset) / zoom;
+}
+
+function map_to_local_space(coord, map_offset, zoom) {
+    return coord * zoom + map_offset;
+}
