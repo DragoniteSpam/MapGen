@@ -2,6 +2,11 @@ function Navmesh() constructor {
     self.triangles = [];
     self.relevant_triangle = undefined;
     
+    self.travel = {
+        position: undefined,
+        path: []
+    };
+    
     self.SetRelevantTriangle = function(triangle) {
         self.relevant_triangle = triangle;
     };
@@ -69,6 +74,21 @@ function Navmesh() constructor {
             self.triangles[i].Render(zoom, map_x, map_y, mx, my, color, alpha);
         }
         draw_primitive_end();
+    };
+    
+    self.RenderTravel = function(zoom, map_x, map_y) {
+        if (self.travel.position) {
+            var jx = map_to_local_space(self.travel.position.x, map_x, zoom);
+            var jy = map_to_local_space(self.travel.position.y, map_y, zoom);
+            draw_sprite(spr_juju, 0, jx, jy);
+        }
+    };
+    
+    self.SetTravelPoint = function(x, y) {
+        if (!self.travel.position)
+            self.travel.position = { x: 0, y: 0 };
+        self.travel.position.x = x;
+        self.travel.position.y = y;
     };
 }
 
@@ -172,6 +192,10 @@ function NavmeshTriangle(a = undefined, b = undefined, c = undefined) constructo
                         obj_main.navmesh.SetRelevantTriangle(self);
                     }
                 }
+            }
+            
+            if (mouse_check_button_pressed(mb_right)) {
+                obj_main.navmesh.SetTravelPoint(abs_x, abs_y);
             }
         }
     };

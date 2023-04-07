@@ -117,6 +117,7 @@
     {"id":{"name":"EmuCheckbox","path":"scripts/EmuCheckbox/EmuCheckbox.yy",},},
     {"id":{"name":"__scribble_font_add_sprite","path":"scripts/__scribble_font_add_sprite/__scribble_font_add_sprite.yy",},},
     {"id":{"name":"__scribble_system_glyph_data","path":"scripts/__scribble_system_glyph_data/__scribble_system_glyph_data.yy",},},
+    {"id":{"name":"spr_juju","path":"sprites/spr_juju/spr_juju.yy",},},
     {"id":{"name":"__scribble_gc_collect","path":"scripts/__scribble_gc_collect/__scribble_gc_collect.yy",},},
     {"id":{"name":"spr_location","path":"sprites/spr_location/spr_location.yy",},},
     {"id":{"name":"Misc","path":"scripts/Misc/Misc.yy",},},

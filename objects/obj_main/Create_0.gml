@@ -257,6 +257,9 @@ self.container.AddContent([
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
             obj_main.locations[i].RenderPost(self.zoom, self.map_x, self.map_y, mx, my);
         }
+        
+        obj_main.navmesh.RenderTravel(self.zoom, self.map_x, self.map_y);
+        
         switch (obj_main.settings.map_mode) {
             case EMapModes.DEFAULT:
                 draw_set_alpha(0.75);

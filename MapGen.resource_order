@@ -76,6 +76,7 @@
     {"name":"EmuCheckbox","order":4,"path":"scripts/EmuCheckbox/EmuCheckbox.yy",},
     {"name":"__scribble_font_add_sprite","order":7,"path":"scripts/__scribble_font_add_sprite/__scribble_font_add_sprite.yy",},
     {"name":"__scribble_system_glyph_data","order":10,"path":"scripts/__scribble_system_glyph_data/__scribble_system_glyph_data.yy",},
+    {"name":"spr_juju","order":11,"path":"sprites/spr_juju/spr_juju.yy",},
     {"name":"__scribble_gc_collect","order":8,"path":"scripts/__scribble_gc_collect/__scribble_gc_collect.yy",},
     {"name":"spr_location","order":5,"path":"sprites/spr_location/spr_location.yy",},
     {"name":"Misc","order":6,"path":"scripts/Misc/Misc.yy",},
