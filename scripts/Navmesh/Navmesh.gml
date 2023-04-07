@@ -81,6 +81,14 @@ function Navmesh() constructor {
             var jx = map_to_local_space(self.travel.position.x, map_x, zoom);
             var jy = map_to_local_space(self.travel.position.y, map_y, zoom);
             draw_sprite(spr_juju, 0, jx, jy);
+            
+            for (var i = 1, n = array_length(self.travel.path); i < n; i++) {
+                var lx = map_to_local_space(self.travel.path[i - 1].x, map_x, zoom);
+                var ly = map_to_local_space(self.travel.path[i - 1].y, map_y, zoom);
+                var px = map_to_local_space(self.travel.path[i].x, map_x, zoom);
+                var py = map_to_local_space(self.travel.path[i].y, map_y, zoom);
+                draw_line_width_colour(lx, ly, px, py, NAVMESH_PATH_CONNECTION_WIDTH, c_navmesh_path_connection, c_navmesh_path_connection);
+            }
         }
     };
     
