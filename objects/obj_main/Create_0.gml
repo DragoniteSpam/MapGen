@@ -251,10 +251,21 @@ self.container.AddContent([
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
             obj_main.locations[i].RenderPost(self.zoom, self.map_x, self.map_y, mx, my);
         }
-        draw_set_alpha(0.75);
-        draw_rectangle_colour(0, 0, self.width, 32, c_white, c_white, c_white, c_white, false);
-        draw_set_alpha(1);
-        draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
+        switch (obj_main.settings.map_mode) {
+            case EMapModes.DEFAULT:
+                draw_set_alpha(0.75);
+                draw_rectangle_colour(0, 0, self.width, 32, c_white, c_white, c_white, c_white, false);
+                draw_set_alpha(1);
+                draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
+                break;
+            case EMapModes.NAVMESH:
+                draw_set_alpha(0.75);
+                draw_rectangle_colour(0, 0, self.width, 64, c_white, c_white, c_white, c_white, false);
+                draw_set_alpha(1);
+                draw_text_colour(16, 16, "Click on a node to create a navmesh triangle; ctrl+click on a triangle to subdivide a triangle at that point", c_black, c_black, c_black, c_black, 1);
+                draw_text_colour(16, 48, "Right click somewhere on the graph to traverse", c_black, c_black, c_black, c_black, 1);
+                break;
+        }
     }, function(mx, my) {
         if (!self.isActiveDialog()) return;
         var mouse_in_view = (mx >= 0 && mx <= self.width && my >= 0 && my <= self.width);
