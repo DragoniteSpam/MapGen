@@ -30,10 +30,11 @@ function Navmesh() constructor {
         self.Delete(array_length(self.triangles) - 1);
     };
     
-    self.Delete = function(index) {
-        if (index >= 0 && index < array_length(self.triangles)) {
-            array_delete(self.triangles, index, 1);
-        }
+    self.Delete = function(triangle) {
+        var index = array_get_index(self.triangles, triangle);
+        if (index == -1)
+            return;
+        array_delete(self.triangles, index, 1);
     };
     
     self.HasTriangleWaiting = function() {
@@ -63,7 +64,9 @@ function Navmesh() constructor {
     self.Render = function(zoom, map_x, map_y, mx, my) {
         draw_primitive_begin(pr_trianglelist);
         for (var i = 0, n = array_length(self.triangles); i < n; i++) {
-            self.triangles[i].Render(zoom, map_x, map_y, mx, my);
+            var color = self.triangles[i] == self.relevant_triangle ? c_navmesh_fill_relevant : c_navmesh_fill;
+            var alpha = self.triangles[i] == self.relevant_triangle ? c_navmesh_fill_alpha_relevant : c_navmesh_fill_alpha;
+            self.triangles[i].Render(zoom, map_x, map_y, mx, my, color, alpha);
         }
         draw_primitive_end();
     };
@@ -108,14 +111,14 @@ function NavmeshTriangle() constructor {
         }
     };
     
-    self.Render = function(zoom, map_x, map_y, mx, my) {
+    self.Render = function(zoom, map_x, map_y, mx, my, color, alpha) {
         static positions = array_create(3);
         
         if (self.IsComplete()) {
             var cx = 0;
             var cy = 0;
             for (var i = 0, n = array_length(self.vertices); i < n; i++) {
-                var position = self.vertices[i].RenderNavmesh(zoom, map_x, map_y, mx, my);
+                var position = self.vertices[i].RenderNavmesh(zoom, map_x, map_y, mx, my, color, alpha);
                 cx += position.x;
                 cy += position.y;
                 positions[i] = position;

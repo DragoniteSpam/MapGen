@@ -62,10 +62,10 @@ function Location(x, y) constructor {
         }
     };
     
-    self.RenderNavmesh = function(zoom, map_x, map_y, mx, my) {
+    self.RenderNavmesh = function(zoom, map_x, map_y, mx, my, color, alpha) {
         var xx = self.x * zoom + map_x;
         var yy = self.y * zoom + map_y;
-        draw_vertex_color(xx, yy, c_navmesh_fill, c_navmesh_fill_alpha);
+        draw_vertex_color(xx, yy, color, alpha);
         return { x: xx, y: yy };
     };
     
