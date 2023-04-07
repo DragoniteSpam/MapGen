@@ -230,7 +230,13 @@ self.container.AddContent([
         return dialog;
     })
         .SetID("OPTIONS"),
-    new EmuRenderSurface(32 + 32 + ew, EMU_BASE, 960, 720, function(mx, my) {
+    new EmuRadioArray(32 + 32 + ew, EMU_BASE, 960, 32, "Editing mode:", EMapModes.DEFAULT, function() {
+        obj_main.settings.map_mode = self.value;
+        obj_main.navmesh.ExitEditorMode();
+    })
+        .AddOptions(["Node Placement", "Navmesh Editing"])
+        .SetColumns(1, ew),
+    new EmuRenderSurface(32 + 32 + ew, EMU_AUTO, 960, 656, function(mx, my) {
         draw_clear(c_black);
         if (sprite_exists(obj_main.map_sprite)) {
             draw_sprite_ext(obj_main.map_sprite, 0, self.map_x, self.map_y, self.zoom, self.zoom, 0, c_white, 1);
@@ -318,16 +324,6 @@ self.container.AddContent([
                     obj_main.navmesh.relevant_triangle = undefined;
                 }
                 break;
-        }
-        
-        if (keyboard_check(vk_f5)) {
-            obj_main.settings.map_mode = EMapModes.DEFAULT;
-            obj_main.navmesh.ExitEditorMode();
-        }
-        
-        if (keyboard_check(vk_f6)) {
-            obj_main.settings.map_mode = EMapModes.NAVMESH;
-            obj_main.navmesh.ExitEditorMode();
         }
         
         if (mouse_in_view && mouse_check_button_pressed(mb_middle)) {
