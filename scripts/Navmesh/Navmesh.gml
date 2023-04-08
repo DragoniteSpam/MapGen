@@ -101,21 +101,31 @@ function Navmesh() constructor {
         
         var t_start = get_timer();
         var mesh = navmesh_create();
-        var mesh_nodes = { };
         
-        for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
-            mesh_nodes[$ obj_main.locations[i].Hash()] = navmesh__add_node(mesh, obj_main.locations[i].x, obj_main.locations[i].y, 0);
-        }
+        var data = buffer_create(1000, buffer_grow, 1);
         
         for (var i = 0, n = array_length(self.triangles); i < n; i++) {
             var triangle = self.triangles[i];
             if (!triangle.IsComplete()) continue;
-            var a = mesh_nodes[$ triangle.vertices[0].Hash()];
-            var b = mesh_nodes[$ triangle.vertices[1].Hash()];
-            var c = mesh_nodes[$ triangle.vertices[2].Hash()];
-            navmesh__define_quad(mesh, a, b, c, c, 0, 0, 1);
+            var a = triangle.vertices[0];
+            var b = triangle.vertices[1];
+            var c = triangle.vertices[2];
+            buffer_write(data, buffer_f32, a.x);
+            buffer_write(data, buffer_f32, a.y);
+            buffer_write(data, buffer_f32, 0);
+            buffer_write(data, buffer_f32, b.x);
+            buffer_write(data, buffer_f32, b.y);
+            buffer_write(data, buffer_f32, 0);
+            buffer_write(data, buffer_f32, c.x);
+            buffer_write(data, buffer_f32, c.y);
+            buffer_write(data, buffer_f32, 0);
         }
+        
+        buffer_resize(data, buffer_tell(data));
+        navmesh_add_mbuff(mesh, data, 12);
         navmesh_preprocess(mesh, 5);
+        buffer_delete(data);
+        
         show_debug_message("Navmesh creation took {0} ms", (get_timer() - t_start) / 1000);
         
         t_start = get_timer();
