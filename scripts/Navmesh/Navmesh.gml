@@ -267,7 +267,7 @@ function NavmeshTriangle(a = undefined, b = undefined, c = undefined) constructo
                 positions[i] = position;
             }
             
-            if (obj_main.settings.draw_navmesh_barycenters) {
+            if (obj_main.settings.draw_navmesh_barycenters && obj_main.settings.map_mode == EMapModes.NAVMESH) {
                 cx /= 3;
                 cy /= 3;
                 for (var i = 0; i < 3; i++) {
