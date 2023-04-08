@@ -93,7 +93,7 @@ function Navmesh() constructor {
     
     self.RenderTravel = function(zoom, map_x, map_y) {
         if (self.travel.position) {
-            static spd = 2;
+            static spd = 4;
             
             if (array_length(self.travel.path) > 0) {
                 if (array_length(self.travel.path) > 3) {
