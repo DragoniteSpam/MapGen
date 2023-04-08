@@ -2,7 +2,7 @@ self.container = new EmuCore(0, 0, window_get_width(), window_get_height());
 
 enum EMapModes {
     DEFAULT,
-    NAVMESH,
+    NAVMESH
 }
 
 var ew = 320;
@@ -230,30 +230,54 @@ self.container.AddContent([
         })
         .SetID("MORE"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Options", function() {
-        var dialog = new EmuDialog(560, 320, "MapGen Options");
+        var dialog = new EmuDialog(640, 360, "MapGen Options");
         var ew = dialog.width - 64;
         var eh = 32;
+        var bw = 160;
         dialog.AddContent([
-            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates?", obj_main.settings.export_relative_coordinates, function() {
-                obj_main.settings.export_relative_coordinates = self.value;
-                obj_main.SaveSettings();
-            }),
-            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
-                obj_main.settings.export_names = self.value;
-                obj_main.SaveSettings();
-            }),
-            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
-                obj_main.settings.export_summaries = self.value;
-                obj_main.SaveSettings();
-            }),
-            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
-                obj_main.settings.export_categories = self.value;
-                obj_main.SaveSettings();
-            }),
-            new EmuCheckbox(32, EMU_AUTO, ew, eh, "Draw navmesh barycenters?", obj_main.settings.draw_navmesh_barycenters, function() {
-                obj_main.settings.draw_navmesh_barycenters = self.value;
-                obj_main.SaveSettings();
-            }),
+            new EmuTabGroup(32, EMU_AUTO, ew, eh, 1, eh)
+                .AddTabs(0, [
+                    new EmuTab("Settings").AddContent([
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates?", obj_main.settings.export_relative_coordinates, function() {
+                            obj_main.settings.export_relative_coordinates = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
+                            obj_main.settings.export_names = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
+                            obj_main.settings.export_summaries = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
+                            obj_main.settings.export_categories = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Draw navmesh barycenters?", obj_main.settings.draw_navmesh_barycenters, function() {
+                            obj_main.settings.draw_navmesh_barycenters = self.value;
+                            obj_main.SaveSettings();
+                        })
+                    ]),
+                    new EmuTab("Credits").AddContent([
+                        new EmuButton(0, EMU_AUTO, bw, eh, "Drago", function() {
+                            url_open("https://dragonite.itch.io/");
+                        }),
+                        new EmuText(bw, EMU_INLINE, ew, eh, "Written by [rainbow]a weird dragon bird wizard thing[/rainbow]"),
+                        new EmuButton(0, EMU_AUTO, bw, eh, "Emu", function() {
+                            url_open("https://dragonite.itch.io/emu");
+                        }),
+                        new EmuText(bw, EMU_INLINE, ew, eh, "My UI system"),
+                        new EmuButton(0, EMU_AUTO, bw, eh, "Scribble", function() {
+                            url_open("https://github.com/JujuAdams/Scribble");
+                        }),
+                        new EmuText(bw, EMU_INLINE, ew, eh, "A text renderer by Juju Adams [spr_juju_inline]"),
+                        new EmuButton(0, EMU_AUTO, bw, eh, "Navmesh", function() {
+                            url_open("https://marketplace.yoyogames.com/assets/8245/snidrs-navigation-mesh");
+                        }),
+                        new EmuText(bw, EMU_INLINE, ew, eh, "General-purpose nagivation meshes by TheSnidr"),
+                    ])
+                ])
         ]).AddDefaultCloseButton();
         return dialog;
     })
