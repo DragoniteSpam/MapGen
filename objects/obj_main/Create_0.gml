@@ -305,6 +305,14 @@ self.container.AddContent([
                 draw_set_alpha(1);
                 draw_text_colour(16, 16, "Click on a node to create a navmesh triangle; ctrl+click on a triangle to subdivide a triangle at that point", c_black, c_black, c_black, c_black, 1);
                 draw_text_colour(16, 48, "Right click somewhere on the graph to traverse", c_black, c_black, c_black, c_black, 1);
+                
+                if (obj_main.navmesh.last_build_time != -1) {
+                    draw_set_alpha(0.75);
+                    draw_rectangle_colour(0, self.height - 64, 360, self.height, c_white, c_white, c_white, c_white, false);
+                    draw_set_alpha(1);
+                    draw_text_colour(16, self.height - 48, string("Last build time: {0} ms", obj_main.navmesh.last_build_time), c_black, c_black, c_black, c_black, 1);
+                    draw_text_colour(16, self.height - 16, string("Last navigation time: {0} ms", obj_main.navmesh.last_navigation_time), c_black, c_black, c_black, c_black, 1);
+                }
                 break;
         }
     }, function(mx, my) {

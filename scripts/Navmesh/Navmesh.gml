@@ -2,6 +2,9 @@ function Navmesh() constructor {
     self.triangles = [];
     self.relevant_triangle = undefined;
     
+    self.last_build_time = -1;
+    self.last_navigation_time = -1;
+    
     self.ExportJSON = function() {
         self.ExitEditorMode();
         
@@ -140,13 +143,16 @@ function Navmesh() constructor {
         navmesh_preprocess(mesh, 5);
         buffer_delete(data);
         
-        show_debug_message("Navmesh creation took {0} ms", (get_timer() - t_start) / 1000);
+        self.last_build_time = (get_timer() - t_start) / 1000;
         
         t_start = get_timer();
         
         var path = navmesh_find_path(mesh, self.travel.position.x, self.travel.position.y, 0, x, y, 0, true);
         self.travel.path = (path == -1) ? [] : path;
         
+        self.last_navigation_time = (get_timer() - t_start) / 1000;
+        
+        show_debug_message("Navmesh creation took {0} ms", );
         show_debug_message("Navmesh traversal took {0} ms", (get_timer() - t_start) / 1000);
         
         navmesh_destroy(mesh);
