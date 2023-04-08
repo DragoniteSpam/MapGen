@@ -521,6 +521,15 @@ self.Import = function(filename) {
             self.locations[i].Connect(self.locations[data.locations[i].connections[j]]);
         }
     }
+    
+    var navmesh = data[$ "navmesh"];
+    if (navmesh) {
+        for (var i = 0, n = array_length(navmesh.triangles); i < n; i++) {
+            var triangle = navmesh.triangles[i];
+            self.navmesh.AddTriangle(self.locations[triangle[0]], self.locations[triangle[1]], self.locations[triangle[2]]);
+        }
+    }
+    self.navmesh.relevant_triangle = undefined;
 };
 
 self.Clear = function() {
