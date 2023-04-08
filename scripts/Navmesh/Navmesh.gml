@@ -284,10 +284,17 @@ function NavmeshTriangle(a = undefined, b = undefined, c = undefined) constructo
                         if (keyboard_check(vk_control)) {
                             self.Subdivide(abs_x, abs_y);
                         } else {
-                            obj_main.navmesh.SetRelevantTriangle(self);
+                            var near_corner = array_reduce(self.vertices, method({ mx: mx, my: my, map_x: map_x, map_y: map_y, zoom: zoom }, function(state, location) {
+                                static closeness = sprite_get_width(spr_location) * 2;
+                                return state || point_distance(self.mx, self.my, map_to_local_space(location.x, self.map_x, self.zoom), map_to_local_space(location.y, self.map_y, self.zoom)) < closeness;
+                            }), false);
+                            
+                            if (!near_corner) {
+                                obj_main.navmesh.SetRelevantTriangle(self);
+                            }
                         }
                     }
-                
+                    
                     if (mouse_check_button_pressed(mb_right)) {
                         obj_main.navmesh.SetTravelPoint(abs_x, abs_y);
                     }
