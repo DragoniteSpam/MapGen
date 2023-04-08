@@ -116,6 +116,24 @@ function Navmesh() constructor {
         var t_start = get_timer();
         var mesh = navmesh_create();
         
+        var data = self.GetBinary();
+        navmesh_add_mbuff(mesh, data, 12);
+        navmesh_preprocess(mesh, 5);
+        buffer_delete(data);
+        
+        show_debug_message("Navmesh creation took {0} ms", (get_timer() - t_start) / 1000);
+        
+        t_start = get_timer();
+        
+        var path = navmesh_find_path(mesh, self.travel.position.x, self.travel.position.y, 0, x, y, 0, true);
+        self.travel.path = (path == -1) ? [] : path;
+        
+        show_debug_message("Navmesh traversal took {0} ms", (get_timer() - t_start) / 1000);
+        
+        navmesh_destroy(mesh);
+    };
+    
+    self.GetBinary = function() {
         var data = buffer_create(1000, buffer_grow, 1);
         
         for (var i = 0, n = array_length(self.triangles); i < n; i++) {
@@ -136,20 +154,8 @@ function Navmesh() constructor {
         }
         
         buffer_resize(data, buffer_tell(data));
-        navmesh_add_mbuff(mesh, data, 12);
-        navmesh_preprocess(mesh, 5);
-        buffer_delete(data);
         
-        show_debug_message("Navmesh creation took {0} ms", (get_timer() - t_start) / 1000);
-        
-        t_start = get_timer();
-        
-        var path = navmesh_find_path(mesh, self.travel.position.x, self.travel.position.y, 0, x, y, 0, true);
-        self.travel.path = (path == -1) ? [] : path;
-        
-        show_debug_message("Navmesh traversal took {0} ms", (get_timer() - t_start) / 1000);
-        
-        navmesh_destroy(mesh);
+        return data;
     };
 }
 
