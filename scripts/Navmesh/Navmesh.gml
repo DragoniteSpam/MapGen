@@ -2,6 +2,20 @@ function Navmesh() constructor {
     self.triangles = [];
     self.relevant_triangle = undefined;
     
+    self.ExportJSON = function() {
+        self.ExitEditorMode();
+        
+        var json = {
+            triangles: array_create(array_length(self.triangles)),
+        };
+        
+        for (var i = 0, n = array_length(self.triangles); i < n; i++) {
+            json.triangles[i] = self.triangles[i].ExportJSON();
+        }
+        
+        return json;
+    };
+    
     self.travel = {
         position: undefined,
         // this is one of snidr's returned navmesh paths - it's an array of (positions * 3) elements, with x y z stored sequentially
@@ -141,6 +155,14 @@ function Navmesh() constructor {
 
 function NavmeshTriangle(a = undefined, b = undefined, c = undefined) constructor {
     self.vertices = [];
+    
+    self.ExportJSON = function() {
+        return [
+            array_get_index(obj_main.locations, self.vertices[0]),
+            array_get_index(obj_main.locations, self.vertices[1]),
+            array_get_index(obj_main.locations, self.vertices[2])
+        ];
+    };
     
     self.IsComplete = function() {
         return array_length(self.vertices) == 3;

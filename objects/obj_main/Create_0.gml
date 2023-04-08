@@ -369,17 +369,18 @@ self.container.AddContent([
 
 self.Export = function(filename, force_save_attributes = false) {
     var output = {
-        relative: obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
+        relative: self.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
         full_size: {
-            w: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
-            h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
+            w: (self.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
+            h: (self.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
         locations: array_create(array_length(self.locations)),
+        navmesh: self.navmesh.ExportJSON(),
         settings: {
-            export_relative_coordinates: obj_main.settings.export_relative_coordinates,
-            export_names: obj_main.settings.export_names,
-            export_summaries: obj_main.settings.export_summaries,
-            export_categories: obj_main.settings.export_categories,
+            export_relative_coordinates: self.settings.export_relative_coordinates,
+            export_names: self.settings.export_names,
+            export_summaries: self.settings.export_summaries,
+            export_categories: self.settings.export_categories,
         },
     };
     
@@ -424,16 +425,16 @@ self.Export = function(filename, force_save_attributes = false) {
 self.ExportBin = function(filename) {
     var header = {
         version: 0,
-        relative: obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
+        relative: self.settings.export_relative_coordinates && sprite_exists(self.map_sprite),
         full_size: {
-            w: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
-            h: (obj_main.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
+            w: (self.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
+            h: (self.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
         settings: {
-            export_relative_coordinates: obj_main.settings.export_relative_coordinates,
-            export_names: obj_main.settings.export_names,
-            export_summaries: obj_main.settings.export_summaries,
-            export_categories: obj_main.settings.export_categories,
+            export_relative_coordinates: self.settings.export_relative_coordinates,
+            export_names: self.settings.export_names,
+            export_summaries: self.settings.export_summaries,
+            export_categories: self.settings.export_categories,
         },
     };
     
