@@ -135,7 +135,7 @@ function Location(x, y) constructor {
     };
     
     self.toString = function() {
-        return (!self.locked ? "[spr_lock]" : "") + (self.summary != "" ? "[c_aqua]" : "") + self.name + (self.category != "" ? (" [c_gray](" + self.category + ")") : "");
+        return (self.locked ? "[spr_lock]" : "") + (self.summary != "" ? "[c_aqua]" : "") + self.name + (self.category != "" ? (" [c_gray](" + self.category + ")") : "");
     };
     
     self.Hash = function() {
