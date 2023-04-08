@@ -487,6 +487,14 @@ self.ExportBin = function(filename) {
         }
     }
     
+    var navmesh = self.navmesh.GetBinary();
+    var navmesh_size = buffer_get_size(navmesh);
+    buffer_write(buffer, buffer_u32, navmesh_size);
+    buffer_resize(buffer, buffer_get_size(buffer) + navmesh_size);
+    buffer_copy(navmesh, 0, navmesh_size, buffer, buffer_tell(buffer));
+    buffer_seek(buffer, buffer_seek_relative, navmesh_size);
+    buffer_delete(navmesh);
+    
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
     
