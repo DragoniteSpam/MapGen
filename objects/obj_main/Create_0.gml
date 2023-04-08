@@ -276,6 +276,9 @@ self.container.AddContent([
                 break;
         }
     }, function(mx, my) {
+        self.width = display_get_gui_width() - self.x - 32;
+        self.height = display_get_gui_height() - self.y - 32;
+        
         if (!self.isActiveDialog()) return;
         var mouse_in_view = (mx >= 0 && mx <= self.width && my >= 0 && my <= self.width);
         if (mouse_in_view) {
