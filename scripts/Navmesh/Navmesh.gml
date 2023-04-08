@@ -79,17 +79,17 @@ function Navmesh() constructor {
     
     self.RenderTravel = function(zoom, map_x, map_y) {
         if (self.travel.position) {
+            draw_primitive_begin(pr_linestrip);
+            for (var i = 0, n = array_length(self.travel.path); i < n; i += 3) {
+                var px = map_to_local_space(self.travel.path[i + 0], map_x, zoom);
+                var py = map_to_local_space(self.travel.path[i + 1], map_y, zoom);
+                draw_vertex_colour(px, py, c_navmesh_path_connection, 1);
+            }
+            draw_primitive_end();
+            
             var jx = map_to_local_space(self.travel.position.x, map_x, zoom);
             var jy = map_to_local_space(self.travel.position.y, map_y, zoom);
             draw_sprite(spr_juju, 0, jx, jy);
-            
-            for (var i = 3, n = array_length(self.travel.path); i < n; i += 3) {
-                var lx = map_to_local_space(self.travel.path[i - 3 + 0], map_x, zoom);
-                var ly = map_to_local_space(self.travel.path[i - 3 + 1], map_y, zoom);
-                var px = map_to_local_space(self.travel.path[i + 0], map_x, zoom);
-                var py = map_to_local_space(self.travel.path[i + 1], map_y, zoom);
-                draw_line_width_colour(lx, ly, px, py, NAVMESH_PATH_CONNECTION_WIDTH, c_navmesh_path_connection, c_navmesh_path_connection);
-            }
         }
     };
     
@@ -109,6 +109,7 @@ function Navmesh() constructor {
         
         for (var i = 0, n = array_length(self.triangles); i < n; i++) {
             var triangle = self.triangles[i];
+            if (!triangle.IsComplete()) continue;
             var a = mesh_nodes[$ triangle.vertices[0].Hash()];
             var b = mesh_nodes[$ triangle.vertices[1].Hash()];
             var c = mesh_nodes[$ triangle.vertices[2].Hash()];
