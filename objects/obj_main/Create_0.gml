@@ -138,7 +138,7 @@ self.container.AddContent([
     new EmuButton(32, EMU_AUTO, ew, eh, "Clear", function() {
         obj_main.Clear();
     }),
-    new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 12, function() {
+    new EmuList(32, EMU_AUTO, ew, eh, "Locations:", eh, 10, function() {
         if (!obj_main.refresh_list) return;
         if (!self.root) return;
         obj_main.refresh_list = false;
@@ -170,6 +170,15 @@ self.container.AddContent([
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
             self.SetValue(obj_main.active_location.name);
+        }),
+    new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", true, function() {
+        obj_main.active_location.locked = self.value;
+    })
+        .SetInteractive(false)
+        .SetRefresh(function() {
+            self.SetInteractive(!!obj_main.active_location);
+            if (!obj_main.active_location) return;
+            self.SetValue(obj_main.active_location.locked);
         }),
     new EmuButton(32, EMU_AUTO, ew, eh, "More...", function() {
         var dialog = new EmuDialog(560, 320, "More settings: " + string(obj_main.active_location.name));
