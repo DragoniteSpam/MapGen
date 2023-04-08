@@ -93,13 +93,32 @@ function Navmesh() constructor {
     
     self.RenderTravel = function(zoom, map_x, map_y) {
         if (self.travel.position) {
-            draw_primitive_begin(pr_linestrip);
-            for (var i = 0, n = array_length(self.travel.path); i < n; i += 3) {
-                var px = map_to_local_space(self.travel.path[i + 0], map_x, zoom);
-                var py = map_to_local_space(self.travel.path[i + 1], map_y, zoom);
-                draw_vertex_colour(px, py, c_navmesh_path_connection, 1);
+            static spd = 2;
+            
+            if (array_length(self.travel.path) > 0) {
+                if (array_length(self.travel.path) > 3) {
+                    var dist = point_distance(self.travel.position.x, self.travel.position.y, self.travel.path[3], self.travel.path[4]);
+                    var dir = point_direction(self.travel.position.x, self.travel.position.y, self.travel.path[3], self.travel.path[4]);
+                    if (dist <= spd) {
+                        self.travel.position.x = self.travel.path[3];
+                        self.travel.position.y = self.travel.path[4];
+                        array_delete(self.travel.path, 0, 3);
+                    } else {
+                        self.travel.position.x += spd * dcos(dir);
+                        self.travel.position.y -= spd * dsin(dir);
+                        self.travel.path[0] = self.travel.position.x;
+                        self.travel.path[1] = self.travel.position.y;
+                    }
+                }
+                
+                draw_primitive_begin(pr_linestrip);
+                for (var i = 0, n = array_length(self.travel.path); i < n; i += 3) {
+                    var px = map_to_local_space(self.travel.path[i + 0], map_x, zoom);
+                    var py = map_to_local_space(self.travel.path[i + 1], map_y, zoom);
+                    draw_vertex_colour(px, py, c_navmesh_path_connection, 1);
+                }
+                draw_primitive_end();
             }
-            draw_primitive_end();
             
             var jx = map_to_local_space(self.travel.position.x, map_x, zoom);
             var jy = map_to_local_space(self.travel.position.y, map_y, zoom);
