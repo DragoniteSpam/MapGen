@@ -146,6 +146,10 @@ self.container.AddContent([
         self.root.Refresh();
         obj_main.refresh_list = true;
     })
+        .SetUpdate(function() {
+            var other_content_height = self.GetSibling("OPTIONS").y + self.GetSibling("OPTIONS").height - self.GetHeight() + self.root.element_spacing_y * 4;
+            self.slots = (display_get_gui_height() - other_content_height) div self.height;
+        })
         .SetCallbackDouble(function() {
             self.GetSibling("MORE").callback();
         })
@@ -159,27 +163,38 @@ self.container.AddContent([
             if (!location) return;
             self.ClearSelection();
             self.Select(array_get_index(obj_main.locations, location));
-        }),
+        })
+        .SetID("LOCATION LIST"),
     new EmuInput(32, EMU_AUTO, ew, eh, "Name:", "", "location name", 100, E_InputTypes.STRING, function() {
         if (obj_main.active_location) {
             obj_main.active_location.name = self.value;
         }
     })
+        .SetUpdate(function() {
+            var previous = self.GetSibling("LOCATION LIST");
+            self.y = previous.y + previous.GetHeight() + self.root.element_spacing_y;
+        })
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
             self.SetValue(obj_main.active_location.name);
-        }),
+        })
+        .SetID("LOCATION NAME"),
     new EmuCheckbox(32, EMU_AUTO, ew, eh, "Locked?", true, function() {
         obj_main.active_location.locked = self.value;
     })
+        .SetUpdate(function() {
+            var previous = self.GetSibling("LOCATION NAME");
+            self.y = previous.y + previous.GetHeight() + self.root.element_spacing_y;
+        })
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
             if (!obj_main.active_location) return;
             self.SetValue(obj_main.active_location.locked);
-        }),
+        })
+        .SetID("LOCATION LOCKED"),
     new EmuButton(32, EMU_AUTO, ew, eh, "More...", function() {
         var dialog = new EmuDialog(560, 320, "More settings: " + string(obj_main.active_location.name));
         var ew = dialog.width - 64;
@@ -204,6 +219,10 @@ self.container.AddContent([
         ]).AddDefaultCloseButton();
         return dialog;
     })
+        .SetUpdate(function() {
+            var previous = self.GetSibling("LOCATION LOCKED");
+            self.y = previous.y + previous.GetHeight() + self.root.element_spacing_y;
+        })
         .SetInteractive(false)
         .SetRefresh(function() {
             self.SetInteractive(!!obj_main.active_location);
@@ -238,6 +257,10 @@ self.container.AddContent([
         ]).AddDefaultCloseButton();
         return dialog;
     })
+        .SetUpdate(function() {
+            var previous = self.GetSibling("MORE");
+            self.y = previous.y + previous.GetHeight() + self.root.element_spacing_y;
+        })
         .SetID("OPTIONS"),
     new EmuRadioArray(32 + 32 + ew, EMU_BASE, 960, 32, "Editing mode:", EMapModes.DEFAULT, function() {
         obj_main.settings.map_mode = self.value;
