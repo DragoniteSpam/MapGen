@@ -40,7 +40,7 @@ function navmesh__mbuff_trim_attributes(mBuff, bytesPerVert) {
 			nx = (py2 - py1) * (pz3 - pz1) - (pz2 - pz1) * (py3 - py1);
 			ny = (pz2 - pz1) * (px3 - px1) - (px2 - px1) * (pz3 - pz1);
 			nz = (px2 - px1) * (py3 - py1) - (py2 - py1) * (px3 - px1);
-			l = sqrt(sqr(nx) + sqr(ny) + sqr(nz));
+			l = point_distance_3d(0, 0, 0, nx, ny, nz);
 			if (l == 0){continue;}
 			nx /= l;
 			ny /= l;
