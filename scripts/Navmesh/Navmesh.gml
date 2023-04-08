@@ -4,6 +4,7 @@ function Navmesh() constructor {
     
     self.travel = {
         position: undefined,
+        // this is one of snidr's returned navmesh paths - it's an array of (positions * 3) elements, with x y z stored sequentially
         path: []
     };
     
@@ -82,11 +83,11 @@ function Navmesh() constructor {
             var jy = map_to_local_space(self.travel.position.y, map_y, zoom);
             draw_sprite(spr_juju, 0, jx, jy);
             
-            for (var i = 1, n = array_length(self.travel.path); i < n; i++) {
-                var lx = map_to_local_space(self.travel.path[i - 1].x, map_x, zoom);
-                var ly = map_to_local_space(self.travel.path[i - 1].y, map_y, zoom);
-                var px = map_to_local_space(self.travel.path[i].x, map_x, zoom);
-                var py = map_to_local_space(self.travel.path[i].y, map_y, zoom);
+            for (var i = 3, n = array_length(self.travel.path); i < n; i += 3) {
+                var lx = map_to_local_space(self.travel.path[i - 3 + 0], map_x, zoom);
+                var ly = map_to_local_space(self.travel.path[i - 3 + 1], map_y, zoom);
+                var px = map_to_local_space(self.travel.path[i + 0], map_x, zoom);
+                var py = map_to_local_space(self.travel.path[i + 1], map_y, zoom);
                 draw_line_width_colour(lx, ly, px, py, NAVMESH_PATH_CONNECTION_WIDTH, c_navmesh_path_connection, c_navmesh_path_connection);
             }
         }
@@ -98,27 +99,30 @@ function Navmesh() constructor {
             return;
         }
         
-        self.travel.position.x = x;
-        self.travel.position.y = y;
-        
         var t_start = get_timer();
         var mesh = navmesh_create();
-        var mesh_nodes = array_create(array_length(obj_main.locations));
+        var mesh_nodes = { };
         
         for (var i = 0, n = array_length(obj_main.locations); i < n; i++) {
-            mesh_nodes[i] = navmesh__add_node(mesh, obj_main.locations[i].x, obj_main.locations[i].y, 0);
+            mesh_nodes[$ obj_main.locations[i].Hash()] = navmesh__add_node(mesh, obj_main.locations[i].x, obj_main.locations[i].y, 0);
         }
         
         for (var i = 0, n = array_length(self.triangles); i < n; i++) {
-            var triangle = self.triangles[0];
-            var a = mesh_nodes[array_get_index(obj_main.locations, triangle.vertices[0])];
-            var b = mesh_nodes[array_get_index(obj_main.locations, triangle.vertices[1])];
-            var c = mesh_nodes[array_get_index(obj_main.locations, triangle.vertices[2])];
-            navmesh__node_add_neighbour(a, b);
-            navmesh__node_add_neighbour(b, c);
-            navmesh__node_add_neighbour(c, a);
+            var triangle = self.triangles[i];
+            var a = mesh_nodes[$ triangle.vertices[0].Hash()];
+            var b = mesh_nodes[$ triangle.vertices[1].Hash()];
+            var c = mesh_nodes[$ triangle.vertices[2].Hash()];
+            navmesh__define_quad(mesh, a, b, c, c, 0, 0, 1);
         }
-        show_debug_message("Navmesh creation time took {0} ms", (get_timer() - t_start) / 1000);
+        navmesh_preprocess(mesh, 5);
+        show_debug_message("Navmesh creation took {0} ms", (get_timer() - t_start) / 1000);
+        
+        t_start = get_timer();
+        
+        var path = navmesh_find_path(mesh, self.travel.position.x, self.travel.position.y, 0, x, y, 0, true);
+        self.travel.path = (path == -1) ? [] : path;
+        
+        show_debug_message("Navmesh traversal took {0} ms", (get_timer() - t_start) / 1000);
         
         navmesh_destroy(mesh);
     };
