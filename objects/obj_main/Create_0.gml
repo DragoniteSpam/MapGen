@@ -47,6 +47,8 @@ try {
     self.settings.export_summaries = json[$ "export_summaries"] ?? self.settings.export_summaries;
     self.settings.export_categories = json[$ "export_categories"] ?? self.settings.export_categories;
     self.settings.draw_navmesh_barycenters = json[$ "draw_navmesh_barycenters"] ?? self.settings.draw_navmesh_barycenters;
+    self.settings.export_locations = json[$ "export_locations"] ?? self.settings.export_locations;
+    self.settings.export_navmesh = json[$ "export_navmesh"] ?? self.settings.export_navmesh;
     buffer_delete(buffer);
 } catch (e) {
     show_debug_message("Couldn't load the settings file: {0}", e.message);
@@ -522,6 +524,8 @@ self.ExportBin = function(filename) {
             export_names: self.settings.export_names,
             export_summaries: self.settings.export_summaries,
             export_categories: self.settings.export_categories,
+            export_locations: self.settings.export_locations,
+            export_navmesh: self.settings.export_navmesh,
         },
     };
     

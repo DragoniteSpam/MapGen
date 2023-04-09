@@ -139,7 +139,7 @@ function Navmesh() constructor {
         var mesh = navmesh_create();
         
         var data = self.GetBinary();
-        navmesh_add_mbuff(mesh, data, 12);
+        navmesh_add_mbuff(mesh, data, -1);
         navmesh_preprocess(mesh, 5);
         buffer_delete(data);
         
@@ -180,7 +180,7 @@ function Navmesh() constructor {
         
         buffer_resize(data, buffer_tell(data));
         
-        return data;
+        return navmesh__mbuff_trim_attributes(data, 12);
     };
 }
 
