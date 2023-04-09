@@ -72,7 +72,7 @@ self.ShowSaveDialog = function() {
                 last_file_ext = filename_ext(filename);
                 obj_main.Export(filename);
                 break;
-            case ".connection":
+            case ".navmesh":
                 last_file_ext = filename_ext(filename);
                 obj_main.ExportBin(filename);
                 break;
