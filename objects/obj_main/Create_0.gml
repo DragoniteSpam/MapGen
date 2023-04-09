@@ -55,13 +55,13 @@ self.ShowSaveDialog = function() {
     var save_filter = "";
     switch (last_file_ext) {
         case ".json":
-            save_filter = "JSON files|*.json|Binary Map Connection files|*.connection|Any valid connection files|*.json;*.connection";
+            save_filter = "JSON files|*.json|Binary Map Connection files|*.navmesh|Any valid connection files|*.json;*.navmesh";
             break;
-        case ".connection":
-            save_filter = "Binary Map Connection files|*.connection|Any valid connection files|*.json;*.connection|JSON files|*.json";
+        case ".navmesh":
+            save_filter = "Binary Map Connection files|*.navmesh|Any valid connection files|*.json;*.navmesh|JSON files|*.json";
             break;
         default:
-            save_filter = "Any valid connection files|*.json;*.connection|JSON files|*.json|Binary Map Connection files|*.connection";
+            save_filter = "Any valid connection files|*.json;*.navmesh|JSON files|*.json|Binary Map Connection files|*.navmesh";
             break;
     }
     
