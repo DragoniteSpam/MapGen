@@ -10,7 +10,11 @@ function navmesh_add_mbuff(navMesh, mbuff, sourceBytesPerVert) {
 		Script created by TheSnidr, 2019
 	*/
 	var bytesPerVert = NavMeshBytesPerVert;
-	var mBuff = navmesh__mbuff_trim_attributes(mbuff, sourceBytesPerVert);
+    if (sourceBytesPerVert == -1) {
+        var mBuff = mbuff;
+    } else {
+	    var mBuff = navmesh__mbuff_trim_attributes(mbuff, sourceBytesPerVert);
+    }
 	var bytesPerTri = 3 * bytesPerVert;
 
 	var buffSize = buffer_get_size(mBuff);
