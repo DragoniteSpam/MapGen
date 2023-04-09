@@ -27,6 +27,8 @@ self.settings = {
     export_names: true,
     export_summaries: true,
     export_categories: true,
+    export_locations: true,
+    export_navmesh: true,
 };
 
 self.navmesh = new Navmesh();
@@ -230,7 +232,7 @@ self.container.AddContent([
         })
         .SetID("MORE"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Options", function() {
-        var dialog = new EmuDialog(640, 360, "MapGen Options");
+        var dialog = new EmuDialog(640, 440, "MapGen Options");
         var ew = dialog.width - 64;
         var eh = 32;
         var bw = 160;
@@ -252,6 +254,14 @@ self.container.AddContent([
                         }),
                         new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
                             obj_main.settings.export_categories = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export locations?", obj_main.settings.export_locations, function() {
+                            obj_main.settings.export_locations = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export navmesh?", obj_main.settings.export_navmesh, function() {
+                            obj_main.settings.export_navmesh = self.value;
                             obj_main.SaveSettings();
                         }),
                         new EmuCheckbox(32, EMU_AUTO, ew, eh, "Draw navmesh barycenters?", obj_main.settings.draw_navmesh_barycenters, function() {
@@ -441,44 +451,54 @@ self.Export = function(filename, force_save_attributes = false) {
             w: (self.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_width(self.map_sprite) : 1),
             h: (self.settings.export_relative_coordinates && sprite_exists(self.map_sprite) ? sprite_get_height(self.map_sprite) : 1),
         },
-        locations: array_create(array_length(self.locations)),
-        navmesh: self.navmesh.ExportJSON(),
         settings: {
             export_relative_coordinates: self.settings.export_relative_coordinates,
             export_names: self.settings.export_names,
             export_summaries: self.settings.export_summaries,
             export_categories: self.settings.export_categories,
+            export_locations: self.settings.export_locations,
+            export_navmesh: self.settings.export_navmesh,
         },
     };
     
-    var dwidth = 1 / output.full_size.w;
-    var dheight = 1 / output.full_size.h;
-    
-    for (var i = 0, n = array_length(self.locations); i < n; i++) {
-        self.locations[i].export_index = i;
+    if (self.settings.export_navmesh || force_save_attributes) {
+        output.locations = array_create(array_length(self.locations));
     }
     
-    for (var i = 0, n = array_length(self.locations); i < n; i++) {
-        var source = self.locations[i];
-        var written = {
-            x: source.x * dwidth,
-            y: source.y * dheight,
-            locked: source.locked,
-            connections: array_create(variable_struct_names_count(source.connections)),
-        };
+    if (self.settings.export_navmesh || force_save_attributes) {
+        output.navmesh = self.navmesh.ExportJSON();
+    }
+    
+    if (self.settings.export_navmesh || force_save_attributes) {
+        var dwidth = 1 / output.full_size.w;
+        var dheight = 1 / output.full_size.h;
         
-        if (output.settings.export_names || force_save_attributes)
-            written.name = source.name;
-        if (output.settings.export_summaries || force_save_attributes)
-            written.summary = source.summary;
-        if (output.settings.export_categories || force_save_attributes)
-            written.category = source.category;
-        
-        var connection_keys = variable_struct_get_names(source.connections);
-        for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
-            written.connections[j] = source.connections[$ connection_keys[j]].export_index;
+        for (var i = 0, n = array_length(self.locations); i < n; i++) {
+            self.locations[i].export_index = i;
         }
-        output.locations[i] = written;
+        
+        for (var i = 0, n = array_length(self.locations); i < n; i++) {
+            var source = self.locations[i];
+            var written = {
+                x: source.x * dwidth,
+                y: source.y * dheight,
+                locked: source.locked,
+                connections: array_create(variable_struct_names_count(source.connections)),
+            };
+            
+            if (output.settings.export_names || force_save_attributes)
+                written.name = source.name;
+            if (output.settings.export_summaries || force_save_attributes)
+                written.summary = source.summary;
+            if (output.settings.export_categories || force_save_attributes)
+                written.category = source.category;
+            
+            var connection_keys = variable_struct_get_names(source.connections);
+            for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
+                written.connections[j] = source.connections[$ connection_keys[j]].export_index;
+            }
+            output.locations[i] = written;
+        }
     }
     
     var buffer = buffer_create(1000, buffer_grow, 1);
@@ -505,62 +525,67 @@ self.ExportBin = function(filename) {
         },
     };
     
-    var output_locations = array_create(array_length(self.locations));
-    
-    var dwidth = 1 / header.full_size.w;
-    var dheight = 1 / header.full_size.h;
-    
-    for (var i = 0, n = array_length(self.locations); i < n; i++) {
-        self.locations[i].export_index = i;
-    }
-    
-    for (var i = 0, n = array_length(self.locations); i < n; i++) {
-        var source = self.locations[i];
-        var written = {
-            name: source.name,
-            x: source.x * dwidth,
-            y: source.y * dheight,
-            connections: array_create(variable_struct_names_count(source.connections)),
-            locked: source.locked,
-            summary: source.summary,
-            category: source.category,
-        };
-        var connection_keys = variable_struct_get_names(source.connections);
-        for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
-            written.connections[j] = source.connections[$ connection_keys[j]].export_index;
-        }
-        output_locations[i] = written;
-    }
-    
     var buffer = buffer_create(1000, buffer_grow, 1);
-    
     buffer_write(buffer, buffer_string, json_stringify(header));
-    for (var i = 0, n = array_length(output_locations); i < n; i++) {
-        var location = output_locations[i];
-        buffer_write(buffer, buffer_f64, location.x);
-        buffer_write(buffer, buffer_f64, location.y);
-        buffer_write(buffer, buffer_bool, location.locked);
+    
+    if (self.settings.export_locations) {
+        var dwidth = 1 / header.full_size.w;
+        var dheight = 1 / header.full_size.h;
         
-        if (header.settings.export_names)
-            buffer_write(buffer, buffer_string, location.name);
-        if (header.settings.export_summaries)
-            buffer_write(buffer, buffer_string, location.summary);
-        if (header.settings.export_categories)
-            buffer_write(buffer, buffer_string, location.category);
+        var output_locations = array_create(array_length(self.locations));
         
-        buffer_write(buffer, buffer_s32, array_length(location.connections));
-        for (var j = 0, n2 = array_length(location.connections); j < n2; j++) {
-            buffer_write(buffer, buffer_s32, location.connections[j]);
+        for (var i = 0, n = array_length(self.locations); i < n; i++) {
+            self.locations[i].export_index = i;
+        }
+        
+        for (var i = 0, n = array_length(self.locations); i < n; i++) {
+            var source = self.locations[i];
+            var written = {
+                name: source.name,
+                x: source.x * dwidth,
+                y: source.y * dheight,
+                connections: array_create(variable_struct_names_count(source.connections)),
+                locked: source.locked,
+                summary: source.summary,
+                category: source.category,
+            };
+            var connection_keys = variable_struct_get_names(source.connections);
+            for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
+                written.connections[j] = source.connections[$ connection_keys[j]].export_index;
+            }
+            output_locations[i] = written;
+        }
+        
+        buffer_write(buffer, buffer_s32, array_length(output_locations));
+        for (var i = 0, n = array_length(output_locations); i < n; i++) {
+            var location = output_locations[i];
+            buffer_write(buffer, buffer_f64, location.x);
+            buffer_write(buffer, buffer_f64, location.y);
+            buffer_write(buffer, buffer_bool, location.locked);
+            
+            if (header.settings.export_names)
+                buffer_write(buffer, buffer_string, location.name);
+            if (header.settings.export_summaries)
+                buffer_write(buffer, buffer_string, location.summary);
+            if (header.settings.export_categories)
+                buffer_write(buffer, buffer_string, location.category);
+            
+            buffer_write(buffer, buffer_s32, array_length(location.connections));
+            for (var j = 0, n2 = array_length(location.connections); j < n2; j++) {
+                buffer_write(buffer, buffer_s32, location.connections[j]);
+            }
         }
     }
     
-    var navmesh = self.navmesh.GetBinary();
-    var navmesh_size = buffer_get_size(navmesh);
-    buffer_write(buffer, buffer_u32, navmesh_size);
-    buffer_resize(buffer, buffer_get_size(buffer) + navmesh_size);
-    buffer_copy(navmesh, 0, navmesh_size, buffer, buffer_tell(buffer));
-    buffer_seek(buffer, buffer_seek_relative, navmesh_size);
-    buffer_delete(navmesh);
+    if (self.settings.export_navmesh) {
+        var navmesh = self.navmesh.GetBinary();
+        var navmesh_size = buffer_get_size(navmesh);
+        buffer_write(buffer, buffer_u32, navmesh_size);
+        buffer_resize(buffer, buffer_get_size(buffer) + navmesh_size);
+        buffer_copy(navmesh, 0, navmesh_size, buffer, buffer_tell(buffer));
+        buffer_seek(buffer, buffer_seek_relative, navmesh_size);
+        buffer_delete(navmesh);
+    }
     
     buffer_save_ext(buffer, filename, 0, buffer_tell(buffer));
     buffer_delete(buffer);
