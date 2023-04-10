@@ -234,7 +234,7 @@ self.container.AddContent([
         })
         .SetID("MORE"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Options", function() {
-        var dialog = new EmuDialog(640, 440, "MapGen Options");
+        var dialog = new EmuDialog(720, 440, "MapGen Options");
         var ew = dialog.width - 64;
         var eh = 32;
         var bw = 160;
@@ -288,6 +288,8 @@ self.container.AddContent([
                             url_open("https://marketplace.yoyogames.com/assets/8245/snidrs-navigation-mesh");
                         }),
                         new EmuText(bw, EMU_INLINE, ew, eh, "General-purpose nagivation meshes by TheSnidr"),
+                        
+                        new EmuText(0, EMU_AUTO, ew, eh, "Program icon is based on Map by Andi Nur Abdillah from NounProject.com"),
                     ])
                 ])
         ]).AddDefaultCloseButton();

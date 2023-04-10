@@ -29,9 +29,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Snidrs 3D Pathfinding","folderPath":"folders/Snidrs 3D Pathfinding.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Supplementary scripts","folderPath":"folders/Snidrs 3D Pathfinding/Supplementary scripts.yy",},
   ],
-  "IncludedFiles": [
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"credits.txt","CopyToMask":-1,"filePath":"datafiles",},
-  ],
+  "IncludedFiles": [],
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
