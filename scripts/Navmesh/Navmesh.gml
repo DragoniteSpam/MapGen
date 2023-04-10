@@ -152,9 +152,6 @@ function Navmesh() constructor {
         
         self.last_navigation_time = (get_timer() - t_start) / 1000;
         
-        show_debug_message("Navmesh creation took {0} ms", );
-        show_debug_message("Navmesh traversal took {0} ms", (get_timer() - t_start) / 1000);
-        
         navmesh_destroy(mesh);
     };
     

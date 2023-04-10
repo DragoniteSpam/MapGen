@@ -351,6 +351,11 @@ self.container.AddContent([
                 }
                 break;
         }
+        
+        draw_set_alpha(0.75);
+        draw_rectangle_colour(self.width - 144, self.height - 32, self.width, self.height, c_white, c_white, c_white, c_white, false);
+        draw_set_alpha(1);
+        draw_text_colour(self.width - 128, self.height - 16, string("{0}, {1}", floor(local_to_map_space(mx, self.map_x, self.zoom)), floor(local_to_map_space(my, self.map_y, self.zoom))), c_black, c_black, c_black, c_black, 1);
     }, function(mx, my) {
         self.width = display_get_gui_width() - self.x - 32;
         self.height = display_get_gui_height() - self.y - 32;
