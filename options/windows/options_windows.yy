@@ -6,7 +6,7 @@
   "option_windows_borderless": false,
   "option_windows_company_info": "Michael the Wizardragon",
   "option_windows_copy_exe_to_dest": false,
-  "option_windows_copyright_info": "2022 Michael the Wizardragon",
+  "option_windows_copyright_info": "(c) 2022 - 2023 Michael the Wizardragon",
   "option_windows_description_info": "Create networks of locations on a map",
   "option_windows_disable_sandbox": true,
   "option_windows_display_cursor": true,
@@ -29,6 +29,6 @@
   "option_windows_steam_use_alternative_launcher": false,
   "option_windows_texture_page": "2048x2048",
   "option_windows_use_splash": false,
-  "option_windows_version": "1.2.0.0",
+  "option_windows_version": "1.3.0.0",
   "option_windows_vsync": false,
 }
