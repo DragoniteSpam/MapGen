@@ -152,6 +152,9 @@ self.container.AddContent([
         self.root.Refresh();
         obj_main.refresh_list = true;
     })
+        .SetCallbackDouble(function() {
+            self.GetSibling("MORE").callback();
+        })
         .SetUpdate(function() {
             var other_content_height = self.GetSibling("OPTIONS").y + self.GetSibling("OPTIONS").height - self.GetHeight() + self.root.element_spacing_y * 4;
             self.slots = (display_get_gui_height() - other_content_height) div self.height;
