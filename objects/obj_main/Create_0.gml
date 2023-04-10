@@ -168,7 +168,7 @@ self.container.AddContent([
             var location = obj_main.active_location;
             if (!location) return;
             self.ClearSelection();
-            self.Select(array_get_index(obj_main.locations, location));
+            self.Select(array_get_index(obj_main.locations, location), true);
         })
         .SetID("LOCATION LIST"),
     new EmuInput(32, EMU_AUTO, ew, eh, "Name:", "", "location name", 100, E_InputTypes.STRING, function() {
