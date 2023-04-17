@@ -47,6 +47,7 @@
     {"name":"scribble_font_bake_outline","order":4,"path":"scripts/scribble_font_bake_outline/scribble_font_bake_outline.yy",},
     {"name":"EmuException","order":6,"path":"scripts/EmuException/EmuException.yy",},
     {"name":"__shd_scribble_bake_outline_8dir_2px","order":3,"path":"shaders/__shd_scribble_bake_outline_8dir_2px/__shd_scribble_bake_outline_8dir_2px.yy",},
+    {"name":"AquilaContainer","order":14,"path":"scripts/AquilaContainer/AquilaContainer.yy",},
     {"name":"navmesh__find_nearest_quad","order":3,"path":"scripts/navmesh__find_nearest_quad/navmesh__find_nearest_quad.yy",},
     {"name":"navmesh_create","order":3,"path":"scripts/navmesh_create/navmesh_create.yy",},
     {"name":"__scribble_class_event","order":1,"path":"scripts/__scribble_class_event/__scribble_class_event.yy",},

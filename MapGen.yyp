@@ -83,6 +83,7 @@
     {"id":{"name":"scribble_font_bake_outline","path":"scripts/scribble_font_bake_outline/scribble_font_bake_outline.yy",},},
     {"id":{"name":"EmuException","path":"scripts/EmuException/EmuException.yy",},},
     {"id":{"name":"__shd_scribble_bake_outline_8dir_2px","path":"shaders/__shd_scribble_bake_outline_8dir_2px/__shd_scribble_bake_outline_8dir_2px.yy",},},
+    {"id":{"name":"AquilaContainer","path":"scripts/AquilaContainer/AquilaContainer.yy",},},
     {"id":{"name":"navmesh__find_nearest_quad","path":"scripts/navmesh__find_nearest_quad/navmesh__find_nearest_quad.yy",},},
     {"id":{"name":"navmesh_create","path":"scripts/navmesh_create/navmesh_create.yy",},},
     {"id":{"name":"__scribble_class_event","path":"scripts/__scribble_class_event/__scribble_class_event.yy",},},

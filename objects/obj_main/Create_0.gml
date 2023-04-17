@@ -35,6 +35,7 @@ self.settings = {
 };
 
 self.navmesh = new Navmesh();
+self.aquila = new AquilaContainer();
 
 try {
     self.map_sprite = sprite_add(MAP_IN_STORAGE, 0, false, false, 0, 0);
