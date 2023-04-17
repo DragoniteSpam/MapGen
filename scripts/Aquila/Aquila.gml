@@ -115,7 +115,7 @@ function Aquila() constructor {
             var current = ds_priority_delete_min(frontier);
             
             if (current == destination) {
-                var path = [];
+                var path = [destination];
                 var total_cost = 0;
                 while (current != source) {
                     total_cost += current.connections[$ came_from[$ current.id].id].cost;
