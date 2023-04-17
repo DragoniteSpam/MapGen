@@ -4,26 +4,25 @@ function AquilaContainer() constructor {
     self.travel = {
         position: undefined,
         path: [],
+        start: undefined,
+        finish: undefined
     };
     
-    self.start = undefined;
-    self.finish = undefined;
-    
     self.SetStart = function(start) {
-        self.start = start;
-        self.Navigate();
+        self.travel.start = start;
+        self.Navigate(start, self.travel.finish);
         return self;
     };
     
     self.SetFinish = function(finish) {
-        self.finish = finish;
-        self.Navigate();
+        self.travel.finish = finish;
+        self.Navigate(self.travel.start, finish);
         return self;
     };
     
-    self.Navigate = function() {
-        if (!self.start) return;
-        if (!self.finish) return;
+    self.Navigate = function(start, finish) {
+        if (!start) return;
+        if (!finish) return;
         
         if (!self.travel.position) {
             self.travel.position = { x: self.start.x, y: self.start.y };
@@ -60,6 +59,18 @@ function AquilaContainer() constructor {
         self.last_build_time = (get_timer() - t_start) / 1000;
         
         t_start = get_timer();
+        
+        var result = aquila.Navigate(node_map[$ string(ptr(start))].node, node_map[$ string(ptr(finish))].node);
+        
+        if (result) {
+            self.travel.path = array_create(result.stops);
+            for (var i = 0, n = result.stops; i < n; i++) {
+                self.travel.path[i + 1] = result.route[i].data;
+            }
+        } else {
+            show_debug_message("No result found between {0} and {1}", start.name, finish.name);
+            self.travel.path = [];
+        }
         
         self.last_navigation_time = (get_timer() - t_start) / 1000;
     };
