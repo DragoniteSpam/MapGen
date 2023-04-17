@@ -4,6 +4,7 @@
     {"name":"Scribble","order":2,"path":"folders/Scribble.yy",},
     {"name":"Snidrs 3D Pathfinding","order":9,"path":"folders/Snidrs 3D Pathfinding.yy",},
     {"name":"Supplementary scripts","order":1,"path":"folders/Snidrs 3D Pathfinding/Supplementary scripts.yy",},
+    {"name":"Aquila Pathfinding","order":13,"path":"folders/Aquila Pathfinding.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"scribble_external_sound_remove","order":4,"path":"scripts/scribble_external_sound_remove/scribble_external_sound_remove.yy",},
