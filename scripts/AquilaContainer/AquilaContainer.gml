@@ -25,7 +25,7 @@ function AquilaContainer() constructor {
         if (!finish) return;
         
         if (!self.travel.position) {
-            self.travel.position = { x: self.start.x, y: self.start.y };
+            self.travel.position = { x: start.x, y: start.y };
         }
         
         var t_start = get_timer();
