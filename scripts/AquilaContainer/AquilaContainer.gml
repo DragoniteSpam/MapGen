@@ -2,7 +2,8 @@ function AquilaContainer() constructor {
     self.last_build_time = -1;
     self.last_navigation_time = -1;
     self.travel = {
-        position: undefined
+        position: undefined,
+        path: [],
     };
     
     self.start = undefined;
@@ -61,5 +62,14 @@ function AquilaContainer() constructor {
         t_start = get_timer();
         
         self.last_navigation_time = (get_timer() - t_start) / 1000;
+    };
+    
+    self.LocationsOnRoute = function(a, b) {
+        for (var i = 0, n = array_length(self.travel.path) - 1; i < n; i++) {
+            if ((self.travel.path[i] == a && self.travel.path[i + 1] == b) ||
+                (self.travel.path[i] == b && self.travel.path[i + 1] == a)) {
+                    return true;
+            }
+        }
     };
 }

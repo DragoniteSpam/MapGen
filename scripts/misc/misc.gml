@@ -13,8 +13,10 @@
 #macro c_navmesh_path_connection        c_white
 #macro c_node_connection                c_blue
 #macro c_node_connection_navmesh_active #ff0066
+#macro c_node_connection_aquila_route   #ff0066
 #macro NODE_CONNECTION_WIDTH            2
 #macro NODE_CONNECTION_NAVMESH_WIDTH    4
+#macro NODE_CONNECTION_AQUILA_WIDTH     4
 
 function local_to_map_space(coord, map_offset, zoom) {
     return (coord - map_offset) / zoom;

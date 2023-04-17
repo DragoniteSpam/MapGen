@@ -51,10 +51,20 @@ function Location(x, y) constructor {
             var c = c_node_connection;
             var w = NODE_CONNECTION_WIDTH;
             
-            var navmesh_tri = obj_main.navmesh.relevant_triangle;
-            if (navmesh_tri && navmesh_tri.Contains(self) && navmesh_tri.Contains(dest)) {
-                c = c_node_connection_navmesh_active;
-                w = NODE_CONNECTION_NAVMESH_WIDTH;
+            switch (obj_main.settings.map_mode) {
+                case EMapModes.NAVMESH:
+                    var navmesh_tri = obj_main.navmesh.relevant_triangle;
+                    if (navmesh_tri && navmesh_tri.Contains(self) && navmesh_tri.Contains(dest)) {
+                        c = c_node_connection_navmesh_active;
+                        w = NODE_CONNECTION_NAVMESH_WIDTH;
+                    }
+                    break;
+                case EMapModes.AQUILA:
+                    if (obj_main.aquila.LocationsOnRoute(self, dest)) {
+                        c = c_node_connection_aquila_route;
+                        w = NODE_CONNECTION_AQUILA_WIDTH;
+                    }
+                    break;
             }
             
             var dx = map_to_local_space(dest.x, map_x, zoom);
