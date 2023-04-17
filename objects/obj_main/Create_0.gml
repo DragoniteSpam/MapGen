@@ -58,6 +58,17 @@ try {
     show_debug_message("Couldn't load the settings file: {0}", e.message);
 }
 
+self.PurgeActiveLocation = function() {
+    self.active_location.DisconnectAll();
+    self.navmesh.RemoveAllNodesContaining(self.active_location);
+    array_delete(self.locations, array_get_index(self.locations, self.active_location), 1);
+    if (self.aquila.start == self.active_location)
+        self.aquila.SetStart(undefined);
+    if (self.aquila.finish == self.active_location)
+        self.aquila.SetFinish(undefined);
+    self.active_location = undefined;
+};
+
 self.ShowSaveDialog = function() {
     static last_file_ext = "";
     var save_filter = "";
@@ -421,10 +432,7 @@ self.container.AddContent([
                     obj_main.location_placing = false;
                 }
                 if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
-                    obj_main.active_location.DisconnectAll();
-                    obj_main.navmesh.RemoveAllNodesContaining(obj_main.active_location);
-                    array_delete(obj_main.locations, array_get_index(obj_main.locations, obj_main.active_location), 1);
-                    obj_main.active_location = undefined;
+                    obj_main.PurgeActiveLocation();
                     obj_main.container.Refresh();
                 }
                 break;
