@@ -346,8 +346,6 @@ self.container.AddContent([
             obj_main.locations[i].RenderPost(self.zoom, self.map_x, self.map_y, mx, my);
         }
         
-        obj_main.navmesh.RenderTravel(self.zoom, self.map_x, self.map_y);
-        
         switch (obj_main.settings.map_mode) {
             case EMapModes.DEFAULT:
                 draw_set_alpha(0.75);
@@ -356,6 +354,7 @@ self.container.AddContent([
                 draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
                 break;
             case EMapModes.NAVMESH:
+                obj_main.navmesh.RenderTravel(self.zoom, self.map_x, self.map_y);
                 draw_set_alpha(0.75);
                 draw_rectangle_colour(0, 0, self.width, 64, c_white, c_white, c_white, c_white, false);
                 draw_set_alpha(1);
