@@ -120,6 +120,8 @@ function Location(x, y) constructor {
                         obj_main.navmesh.relevant_triangle.AddVertex(self);
                     }
                     break;
+                case EMapModes.AQUILA:
+                    break;
             }
         } else {
             draw_sprite(spr_location, 0, xx, yy);

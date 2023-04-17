@@ -434,6 +434,9 @@ self.container.AddContent([
                     obj_main.navmesh.relevant_triangle = undefined;
                 }
                 break;
+            case EMapModes.AQUILA:
+                // no modifications are made in this mode
+                break;
         }
         
         if (mouse_in_view && mouse_check_button_pressed(mb_middle)) {
