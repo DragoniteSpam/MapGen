@@ -4,7 +4,8 @@ self.container = new EmuCore(0, 0, window_get_width(), window_get_height());
 
 enum EMapModes {
     DEFAULT,
-    NAVMESH
+    NAVMESH,
+    AQUILA
 }
 
 var ew = 320;
@@ -309,7 +310,7 @@ self.container.AddContent([
         obj_main.settings.map_mode = self.value;
         obj_main.navmesh.ExitEditorMode();
     })
-        .AddOptions(["Node Placement", "Navmesh Editing"])
+        .AddOptions(["Node Placement", "Navmesh Editing", "Aquila (Nodal A*)"])
         .SetColumns(1, ew),
     new EmuRenderSurface(32 + 32 + ew, EMU_AUTO, 960, 656, function(mx, my) {
         draw_clear(c_black);
