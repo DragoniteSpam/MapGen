@@ -121,6 +121,12 @@ function Location(x, y) constructor {
                     }
                     break;
                 case EMapModes.AQUILA:
+                    if (mouse_check_button_pressed(mb_left)) {
+                        obj_main.aquila.SetStart(self);
+                    }
+                    if (mouse_check_button_pressed(mb_right)) {
+                        obj_main.aquila.SetFinish(self);
+                    }
                     break;
             }
         } else {
