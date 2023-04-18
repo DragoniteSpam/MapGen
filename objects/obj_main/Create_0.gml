@@ -25,6 +25,7 @@ self.settings = {
     map_mode: EMapModes.DEFAULT,
     
     draw_navmesh_barycenters: false,
+    draw_location_labels: true,
     
     export_relative_coordinates: true,
     export_names: true,
@@ -51,6 +52,7 @@ try {
     self.settings.export_summaries = json[$ "export_summaries"] ?? self.settings.export_summaries;
     self.settings.export_categories = json[$ "export_categories"] ?? self.settings.export_categories;
     self.settings.draw_navmesh_barycenters = json[$ "draw_navmesh_barycenters"] ?? self.settings.draw_navmesh_barycenters;
+    self.settings.draw_location_labels = json[$ "draw_location_labels"] ?? self.settings.draw_location_labels;
     self.settings.export_locations = json[$ "export_locations"] ?? self.settings.export_locations;
     self.settings.export_navmesh = json[$ "export_navmesh"] ?? self.settings.export_navmesh;
     buffer_delete(buffer);
@@ -249,40 +251,49 @@ self.container.AddContent([
         })
         .SetID("MORE"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Options", function() {
-        var dialog = new EmuDialog(720, 440, "MapGen Options");
+        var dialog = new EmuDialog(760, 400, "MapGen Options");
         var ew = dialog.width - 64;
         var eh = 32;
         var bw = 160;
+        
+        var opt_w = ew / 2;
+        var c1 = 32;
+        var c2 = opt_w;
+        
         dialog.AddContent([
             new EmuTabGroup(32, EMU_AUTO, ew, eh, 1, eh)
                 .AddTabs(0, [
                     new EmuTab("Settings").AddContent([
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export relative coordinates?", obj_main.settings.export_relative_coordinates, function() {
+                        new EmuCheckbox(c1, EMU_AUTO, opt_w, eh, "Export relative coordinates?", obj_main.settings.export_relative_coordinates, function() {
                             obj_main.settings.export_relative_coordinates = self.value;
                             obj_main.SaveSettings();
                         }),
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export names?", obj_main.settings.export_names, function() {
+                        new EmuCheckbox(c1, EMU_AUTO, opt_w, eh, "Export names?", obj_main.settings.export_names, function() {
                             obj_main.settings.export_names = self.value;
                             obj_main.SaveSettings();
                         }),
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
+                        new EmuCheckbox(c1, EMU_AUTO, opt_w, eh, "Export summaries?", obj_main.settings.export_summaries, function() {
                             obj_main.settings.export_summaries = self.value;
                             obj_main.SaveSettings();
                         }),
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export categories?", obj_main.settings.export_categories, function() {
+                        new EmuCheckbox(c1, EMU_AUTO, opt_w, eh, "Export categories?", obj_main.settings.export_categories, function() {
                             obj_main.settings.export_categories = self.value;
                             obj_main.SaveSettings();
                         }),
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export locations?", obj_main.settings.export_locations, function() {
+                        new EmuCheckbox(c1, EMU_AUTO, opt_w, eh, "Export locations?", obj_main.settings.export_locations, function() {
                             obj_main.settings.export_locations = self.value;
                             obj_main.SaveSettings();
                         }),
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Export navmesh?", obj_main.settings.export_navmesh, function() {
+                        new EmuCheckbox(c1, EMU_AUTO, opt_w, eh, "Export navmesh?", obj_main.settings.export_navmesh, function() {
                             obj_main.settings.export_navmesh = self.value;
                             obj_main.SaveSettings();
                         }),
-                        new EmuCheckbox(32, EMU_AUTO, ew, eh, "Draw navmesh barycenters?", obj_main.settings.draw_navmesh_barycenters, function() {
+                        new EmuCheckbox(c2, EMU_BASE, opt_w, eh, "Draw navmesh barycenters?", obj_main.settings.draw_navmesh_barycenters, function() {
                             obj_main.settings.draw_navmesh_barycenters = self.value;
+                            obj_main.SaveSettings();
+                        }),
+                        new EmuCheckbox(c2, EMU_AUTO, opt_w, eh, "Draw location labels?", obj_main.settings.draw_location_labels, function() {
+                            obj_main.settings.draw_location_labels = self.value;
                             obj_main.SaveSettings();
                         })
                     ]),
