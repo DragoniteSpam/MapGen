@@ -87,6 +87,29 @@ function Location(x, y) constructor {
         if (self.locked) {
             draw_sprite(spr_lock, 0, xx, yy + 20);
         }
+        if (obj_main.settings.draw_location_labels) {
+            self.RenderLocationLabel(xx, yy - 20);
+        }
+    };
+    
+    self.RenderLocationLabel = function(x, y) {
+        if (self.name == "") return;
+        
+        var ha = draw_get_halign();
+        var va = draw_get_valign();
+        var font = draw_get_font();
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_font(fnt_location_label);
+        var strw = string_width(self.name) / 2;
+        var strh = string_height(self.name) / 2;
+        var c = c_location_label_fill;
+        var p = 2;
+        draw_rectangle_colour(x - strw - p, y - strh - p, x + strw + p, y + strh + p, c, c, c, c, false);
+        draw_text_colour(x, y, self.name, c_black, c_black, c_black, c_black, 1);
+        draw_set_halign(ha);
+        draw_set_valign(va);
+        draw_set_font(font);
     };
     
     self.RenderPost = function(zoom, map_x, map_y, mx, my) {

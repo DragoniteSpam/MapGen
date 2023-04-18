@@ -6,6 +6,7 @@
 #macro KEY_DELETE           vk_delete
 #macro KEY_DELETE_ALT       vk_backspace
 
+#macro c_location_label_fill            #ffffcc
 #macro c_navmesh_fill                   (obj_main.settings.map_mode == EMapModes.NAVMESH ? c_red : c_maroon)
 #macro c_navmesh_fill_relevant          #ffbb33
 #macro c_navmesh_fill_alpha             (obj_main.settings.map_mode == EMapModes.NAVMESH ? 0.25 : 0.2)

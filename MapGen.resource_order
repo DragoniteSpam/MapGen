@@ -99,6 +99,7 @@
     {"name":"navmesh__node_add_neighbour","order":7,"path":"scripts/navmesh__node_add_neighbour/navmesh__node_add_neighbour.yy",},
     {"name":"scribble_is_text_element","order":6,"path":"scripts/scribble_is_text_element/scribble_is_text_element.yy",},
     {"name":"EmuText","order":15,"path":"scripts/EmuText/EmuText.yy",},
+    {"name":"fnt_location_label","order":17,"path":"fonts/fnt_location_label/fnt_location_label.yy",},
     {"name":"__scribble_gen_9_write_vbuffs","order":8,"path":"scripts/__scribble_gen_9_write_vbuffs/__scribble_gen_9_write_vbuffs.yy",},
     {"name":"scribble_font_add_msdf","order":3,"path":"scripts/scribble_font_add_msdf/scribble_font_add_msdf.yy",},
     {"name":"__scribble_class_font","order":2,"path":"scripts/__scribble_class_font/__scribble_class_font.yy",},
