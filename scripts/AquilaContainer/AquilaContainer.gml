@@ -4,20 +4,27 @@ function AquilaContainer() constructor {
     self.travel = {
         position: undefined,
         path: [],
-        start: undefined,
-        finish: undefined
+        start: undefined
     };
     
-    self.SetStart = function(start) {
-        self.travel.start = start;
-        self.Navigate(start, self.travel.finish);
-        return self;
+    self.CancelTravel = function() {
+        self.travel.position = undefined;
+        self.travel.path = [];
+        self.travel.start = undefined;
     };
     
-    self.SetFinish = function(finish) {
-        self.travel.finish = finish;
-        self.Navigate(self.travel.start, finish);
-        return self;
+    self.SetTarget = function(target) {
+        // if you already have a route, clear it
+        if (array_length(self.travel.path) > 0) {
+            self.CancelTravel();
+        }
+        // if you have a starting point set, navigate to the target
+        if (self.travel.start) {
+            self.Navigate(self.travel.start, target);
+        // if nothing is set, set the target to the starting point
+        } else {
+            self.travel.start = target;
+        }
     };
     
     self.Navigate = function(start, finish) {
@@ -68,7 +75,7 @@ function AquilaContainer() constructor {
                 self.travel.path[i + 1] = result.route[i].data;
             }
         } else {
-            show_debug_message("No result found between {0} and {1}", start.name, finish.name);
+            show_debug_message("No path found between {0} and {1}", start.name, finish.name);
             self.travel.path = [];
         }
         
