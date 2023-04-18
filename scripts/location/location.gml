@@ -112,14 +112,15 @@ function Location(x, y) constructor {
                                 obj_main.active_location.Connect(self);
                             }
                         } else {
-                            obj_main.SetActiveLocation(self);
+                            if (obj_main.active_location == self) {
+                                obj_main.location_placing = true;
+                            } else {
+                                obj_main.SetActiveLocation(self);
+                            }
                         }
                     }
                     if (obj_main.active_location == self) {
                         index = 2;
-                    }
-                    if (mouse_check_button_pressed(mb_left)) {
-                        obj_main.location_placing = true;
                     }
                     break;
                 case EMapModes.NAVMESH:
