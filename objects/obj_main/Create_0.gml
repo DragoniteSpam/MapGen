@@ -448,15 +448,19 @@ self.container.AddContent([
                 } else {
                     obj_main.location_placing = false;
                 }
-                if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
-                    obj_main.PurgeActiveLocation();
-                    obj_main.container.Refresh();
+                if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.height) {
+                    if (obj_main.active_location && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
+                        obj_main.PurgeActiveLocation();
+                        obj_main.container.Refresh();
+                    }
                 }
                 break;
             case EMapModes.NAVMESH:
-                if (obj_main.navmesh.relevant_triangle && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
-                    obj_main.navmesh.Delete(obj_main.navmesh.relevant_triangle);
-                    obj_main.navmesh.relevant_triangle = undefined;
+                if (mx >= 0 && my >= 0 && mx <= self.width && my <= self.height) {
+                    if (obj_main.navmesh.relevant_triangle && (keyboard_check_pressed(KEY_DELETE) || keyboard_check_pressed(KEY_DELETE_ALT))) {
+                        obj_main.navmesh.Delete(obj_main.navmesh.relevant_triangle);
+                        obj_main.navmesh.relevant_triangle = undefined;
+                    }
                 }
                 break;
             case EMapModes.AQUILA:
