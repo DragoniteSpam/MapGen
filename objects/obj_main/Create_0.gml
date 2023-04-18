@@ -353,6 +353,11 @@ self.container.AddContent([
                 draw_rectangle_colour(0, 0, self.width, 32, c_white, c_white, c_white, c_white, false);
                 draw_set_alpha(1);
                 draw_text_colour(16, 16, "Click to add a location; ctrl+click to connect/disconnect locations; enter resets the camera", c_black, c_black, c_black, c_black, 1);
+                
+                draw_set_alpha(0.75);
+                draw_rectangle_colour(self.width - 144, self.height - 64, self.width, self.height - 33, c_white, c_white, c_white, c_white, false);
+                draw_set_alpha(1);
+                draw_text_colour(self.width - 128, self.height - 48, string("Nodes: {0}", array_length(obj_main.locations)), c_black, c_black, c_black, c_black, 1);
                 break;
             case EMapModes.NAVMESH:
                 obj_main.navmesh.RenderTravel(self.zoom, self.map_x, self.map_y);
@@ -369,6 +374,11 @@ self.container.AddContent([
                     draw_text_colour(16, self.height - 48, string("Last build time: {0} ms", obj_main.navmesh.last_build_time), c_black, c_black, c_black, c_black, 1);
                     draw_text_colour(16, self.height - 16, string("Last navigation time: {0} ms", obj_main.navmesh.last_navigation_time), c_black, c_black, c_black, c_black, 1);
                 }
+                
+                draw_set_alpha(0.75);
+                draw_rectangle_colour(self.width - 144, self.height - 64, self.width, self.height - 33, c_white, c_white, c_white, c_white, false);
+                draw_set_alpha(1);
+                draw_text_colour(self.width - 128, self.height - 48, string("Tris: {0}", array_length(obj_main.navmesh.triangles)), c_black, c_black, c_black, c_black, 1);
                 break;
             case EMapModes.AQUILA:
                 obj_main.aquila.RenderTravel(self.zoom, self.map_x, self.map_y);
@@ -385,6 +395,11 @@ self.container.AddContent([
                     draw_text_colour(16, self.height - 48, string("Last build time: {0} ms", obj_main.aquila.last_build_time), c_black, c_black, c_black, c_black, 1);
                     draw_text_colour(16, self.height - 16, string("Last navigation time: {0} ms", obj_main.aquila.last_navigation_time), c_black, c_black, c_black, c_black, 1);
                 }
+                
+                draw_set_alpha(0.75);
+                draw_rectangle_colour(self.width - 144, self.height - 64, self.width, self.height - 33, c_white, c_white, c_white, c_white, false);
+                draw_set_alpha(1);
+                draw_text_colour(self.width - 128, self.height - 48, string("Nodes: {0}", array_length(obj_main.locations)), c_black, c_black, c_black, c_black, 1);
                 break;
         }
         
