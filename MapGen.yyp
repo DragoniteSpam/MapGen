@@ -144,6 +144,7 @@
     {"id":{"name":"__scribble_class_font","path":"scripts/__scribble_class_font/__scribble_class_font.yy",},},
     {"id":{"name":"spr_emu_mask_crosshair","path":"sprites/spr_emu_mask_crosshair/spr_emu_mask_crosshair.yy",},},
     {"id":{"name":"EmuRadioArray","path":"scripts/EmuRadioArray/EmuRadioArray.yy",},},
+    {"id":{"name":"spr_aquila","path":"sprites/spr_aquila/spr_aquila.yy",},},
     {"id":{"name":"scribble_font_bake_outline_8dir_2px","path":"scripts/scribble_font_bake_outline_8dir_2px/scribble_font_bake_outline_8dir_2px.yy",},},
     {"id":{"name":"scribble_super_clear","path":"scripts/scribble_super_clear/scribble_super_clear.yy",},},
     {"id":{"name":"navmesh__mbuff_trim_attributes","path":"scripts/navmesh__mbuff_trim_attributes/navmesh__mbuff_trim_attributes.yy",},},

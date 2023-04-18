@@ -104,6 +104,7 @@
     {"name":"__scribble_class_font","order":2,"path":"scripts/__scribble_class_font/__scribble_class_font.yy",},
     {"name":"spr_emu_mask_crosshair","order":13,"path":"sprites/spr_emu_mask_crosshair/spr_emu_mask_crosshair.yy",},
     {"name":"EmuRadioArray","order":11,"path":"scripts/EmuRadioArray/EmuRadioArray.yy",},
+    {"name":"spr_aquila","order":16,"path":"sprites/spr_aquila/spr_aquila.yy",},
     {"name":"scribble_font_bake_outline_8dir_2px","order":2,"path":"scripts/scribble_font_bake_outline_8dir_2px/scribble_font_bake_outline_8dir_2px.yy",},
     {"name":"navmesh__mbuff_trim_attributes","order":6,"path":"scripts/navmesh__mbuff_trim_attributes/navmesh__mbuff_trim_attributes.yy",},
     {"name":"scribble_font_force_bilinear_filtering","order":5,"path":"scripts/scribble_font_force_bilinear_filtering/scribble_font_force_bilinear_filtering.yy",},
