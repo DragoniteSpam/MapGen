@@ -99,12 +99,7 @@ function Location(x, y) constructor {
         var yy = map_to_local_space(self.y, map_y, zoom);
         
         var mouse_is_over = self.MouseIsOver(zoom, map_x, map_y, mx, my);
-        if (obj_main.active_location == self) {
-            draw_sprite(spr_location, 2, xx, yy);
-            if (mouse_is_over && mouse_check_button_pressed(mb_left)) {
-                obj_main.location_placing = true;
-            }
-        } else if (mouse_is_over) {
+        if (mouse_is_over) {
             var index = 1;
             obj_main.hover_location = self;
             switch (obj_main.settings.map_mode) {
@@ -120,6 +115,12 @@ function Location(x, y) constructor {
                             obj_main.SetActiveLocation(self);
                         }
                     }
+                    if (obj_main.active_location == self) {
+                        index = 2;
+                    }
+                    if (mouse_check_button_pressed(mb_left)) {
+                        obj_main.location_placing = true;
+                    }
                     break;
                 case EMapModes.NAVMESH:
                     if (mouse_check_button_pressed(mb_left)) {
@@ -132,10 +133,7 @@ function Location(x, y) constructor {
                     break;
                 case EMapModes.AQUILA:
                     if (mouse_check_button_pressed(mb_left)) {
-                        obj_main.aquila.SetStart(self);
-                    }
-                    if (mouse_check_button_pressed(mb_right)) {
-                        obj_main.aquila.SetFinish(self);
+                        obj_main.aquila.SetTarget(self);
                     }
                     if (obj_main.aquila.LocationOnRoute(self)) {
                         index = 3;
@@ -146,6 +144,16 @@ function Location(x, y) constructor {
         } else {
             var index = 0;
             switch (obj_main.settings.map_mode) {
+                case EMapModes.DEFAULT:
+                    if (obj_main.active_location == self) {
+                        index = 2;
+                    }
+                    break;
+                case EMapModes.NAVMESH:
+                    if (obj_main.navmesh.relevant_triangle && obj_main.navmesh.relevant_triangle.Contains(self)) {
+                        index = 2;
+                    }
+                    break;
                 case EMapModes.AQUILA:
                     if (obj_main.aquila.LocationOnRoute(self)) {
                         index = 2;
