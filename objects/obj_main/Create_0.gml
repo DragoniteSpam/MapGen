@@ -303,6 +303,10 @@ self.container.AddContent([
                             url_open("https://marketplace.yoyogames.com/assets/8245/snidrs-navigation-mesh");
                         }),
                         new EmuText(bw, EMU_INLINE, ew, eh, "General-purpose nagivation meshes by TheSnidr"),
+                        new EmuButton(0, EMU_AUTO, bw, eh, "Aquila", function() {
+                            url_open("https://dragonite.itch.io/aquila");
+                        }),
+                        new EmuText(bw, EMU_INLINE, ew, eh, "General-purpose A* pathfinding by me"),
                         
                         new EmuText(0, EMU_AUTO, ew, eh, "Program icon is based on Map by Andi Nur Abdillah from NounProject.com"),
                     ])
