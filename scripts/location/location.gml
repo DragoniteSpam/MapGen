@@ -60,7 +60,7 @@ function Location(x, y) constructor {
                     }
                     break;
                 case EMapModes.AQUILA:
-                    if (obj_main.aquila.LocationsOnRoute(self, dest)) {
+                    if (obj_main.aquila.ConnectionOnRoute(self, dest)) {
                         c = c_node_connection_aquila_route;
                         w = NODE_CONNECTION_AQUILA_WIDTH;
                     }
@@ -105,7 +105,7 @@ function Location(x, y) constructor {
                 obj_main.location_placing = true;
             }
         } else if (mouse_is_over) {
-            draw_sprite(spr_location, 1, xx, yy);
+            var index = 1;
             obj_main.hover_location = self;
             switch (obj_main.settings.map_mode) {
                 case EMapModes.DEFAULT:
@@ -137,10 +137,22 @@ function Location(x, y) constructor {
                     if (mouse_check_button_pressed(mb_right)) {
                         obj_main.aquila.SetFinish(self);
                     }
+                    if (obj_main.aquila.LocationOnRoute(self)) {
+                        index = 3;
+                    }
                     break;
             }
+            draw_sprite(spr_location, index, xx, yy);
         } else {
-            draw_sprite(spr_location, 0, xx, yy);
+            var index = 0;
+            switch (obj_main.settings.map_mode) {
+                case EMapModes.AQUILA:
+                    if (obj_main.aquila.LocationOnRoute(self)) {
+                        index = 2;
+                    }
+                    break;
+            }
+            draw_sprite(spr_location, index, xx, yy);
         }
     };
     
