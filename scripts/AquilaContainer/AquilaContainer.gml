@@ -7,10 +7,13 @@ function AquilaContainer() constructor {
         start: undefined
     };
     
-    self.CancelTravel = function() {
-        self.travel.position = undefined;
+    self.CancelTravel = function(reset_position = false) {
+        //self.travel.position = undefined;
         self.travel.path = [];
         self.travel.start = undefined;
+        if (reset_position) {
+            self.travel.position = undefined;
+        }
     };
     
     self.SetTarget = function(target) {
@@ -24,16 +27,13 @@ function AquilaContainer() constructor {
         // if nothing is set, set the target to the starting point
         } else {
             self.travel.start = target;
+            self.travel.position = { x: target.x, y: target.y };
         }
     };
     
     self.Navigate = function(start, finish) {
         if (!start) return;
         if (!finish) return;
-        
-        if (!self.travel.position) {
-            self.travel.position = { x: start.x, y: start.y };
-        }
         
         var t_start = get_timer();
         var aquila = new Aquila();
@@ -72,7 +72,7 @@ function AquilaContainer() constructor {
         if (result) {
             self.travel.path = array_create(result.stops);
             for (var i = 0, n = result.stops; i < n; i++) {
-                self.travel.path[i + 1] = result.route[i].data;
+                self.travel.path[i] = result.route[i].data;
             }
         } else {
             show_debug_message("No path found between {0} and {1}", start.name, finish.name);
@@ -88,19 +88,20 @@ function AquilaContainer() constructor {
         static spd = 4;
         
         if (array_length(self.travel.path) > 0) {
-            if (array_length(self.travel.path) > 3) {
-                var dist = point_distance(self.travel.position.x, self.travel.position.y, self.travel.path[3], self.travel.path[4]);
-                var dir = point_direction(self.travel.position.x, self.travel.position.y, self.travel.path[3], self.travel.path[4]);
-                if (dist <= spd) {
-                    self.travel.position.x = self.travel.path[3];
-                    self.travel.position.y = self.travel.path[4];
-                    array_delete(self.travel.path, 0, 3);
-                } else {
-                    self.travel.position.x += spd * dcos(dir);
-                    self.travel.position.y -= spd * dsin(dir);
-                    self.travel.path[0] = self.travel.position.x;
-                    self.travel.path[1] = self.travel.position.y;
+            var xx = self.travel.path[0].x;
+            var yy = self.travel.path[0].y;
+            var dist = point_distance(self.travel.position.x, self.travel.position.y, xx, yy);
+            var dir = point_direction(self.travel.position.x, self.travel.position.y, xx, yy);
+            if (dist <= spd) {
+                self.travel.position.x = xx;
+                self.travel.position.y = yy;
+                array_delete(self.travel.path, 0, 1);
+                if (array_length(self.travel.path) == 0) {
+                    self.CancelTravel();
                 }
+            } else {
+                self.travel.position.x += spd * dcos(dir);
+                self.travel.position.y -= spd * dsin(dir);
             }
         }
         
@@ -120,6 +121,10 @@ function AquilaContainer() constructor {
     };
     
     self.LocationOnRoute = function(location) {
+        if (array_length(self.travel.path) == 0) {
+            return self.travel.start == location;
+        }
+        
         for (var i = 0, n = array_length(self.travel.path); i < n; i++) {
             if (self.travel.path[i] == location) {
                 return true;

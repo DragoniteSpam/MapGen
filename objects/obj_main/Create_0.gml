@@ -62,10 +62,7 @@ self.PurgeActiveLocation = function() {
     self.active_location.DisconnectAll();
     self.navmesh.RemoveAllNodesContaining(self.active_location);
     array_delete(self.locations, array_get_index(self.locations, self.active_location), 1);
-    if (self.aquila.start == self.active_location)
-        self.aquila.SetStart(undefined);
-    if (self.aquila.finish == self.active_location)
-        self.aquila.SetFinish(undefined);
+    self.aquila.CancelTravel();
     self.active_location = undefined;
 };
 
