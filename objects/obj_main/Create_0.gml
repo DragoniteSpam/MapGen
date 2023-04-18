@@ -370,6 +370,8 @@ self.container.AddContent([
                 }
                 break;
             case EMapModes.AQUILA:
+                obj_main.aquila.RenderTravel(self.zoom, self.map_x, self.map_y);
+                
                 draw_set_alpha(0.75);
                 draw_rectangle_colour(0, 0, self.width, 64, c_white, c_white, c_white, c_white, false);
                 draw_set_alpha(1);

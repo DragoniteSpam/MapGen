@@ -82,6 +82,33 @@ function AquilaContainer() constructor {
         self.last_navigation_time = (get_timer() - t_start) / 1000;
     };
     
+    self.RenderTravel = function(zoom, map_x, map_y) {
+        if (!self.travel.position) return;
+        
+        static spd = 4;
+        
+        if (array_length(self.travel.path) > 0) {
+            if (array_length(self.travel.path) > 3) {
+                var dist = point_distance(self.travel.position.x, self.travel.position.y, self.travel.path[3], self.travel.path[4]);
+                var dir = point_direction(self.travel.position.x, self.travel.position.y, self.travel.path[3], self.travel.path[4]);
+                if (dist <= spd) {
+                    self.travel.position.x = self.travel.path[3];
+                    self.travel.position.y = self.travel.path[4];
+                    array_delete(self.travel.path, 0, 3);
+                } else {
+                    self.travel.position.x += spd * dcos(dir);
+                    self.travel.position.y -= spd * dsin(dir);
+                    self.travel.path[0] = self.travel.position.x;
+                    self.travel.path[1] = self.travel.position.y;
+                }
+            }
+        }
+        
+        var jx = map_to_local_space(self.travel.position.x, map_x, zoom);
+        var jy = map_to_local_space(self.travel.position.y, map_y, zoom);
+        draw_sprite(spr_aquila, 0, jx, jy);
+    };
+    
     self.ConnectionOnRoute = function(a, b) {
         for (var i = 0, n = array_length(self.travel.path) - 1; i < n; i++) {
             if ((self.travel.path[i] == a && self.travel.path[i + 1] == b) ||
