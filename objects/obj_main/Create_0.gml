@@ -537,7 +537,7 @@ self.Export = function(filename, force_save_attributes = false) {
         },
     };
     
-    if (self.settings.export_navmesh || force_save_attributes) {
+    if (self.settings.export_locations || force_save_attributes) {
         output.locations = array_create(array_length(self.locations));
     }
     
@@ -545,36 +545,35 @@ self.Export = function(filename, force_save_attributes = false) {
         output.navmesh = self.navmesh.ExportJSON();
     }
     
-    if (self.settings.export_navmesh || force_save_attributes) {
-        var dwidth = 1 / output.full_size.w;
-        var dheight = 1 / output.full_size.h;
+    // always save locations as json
+    var dwidth = 1 / output.full_size.w;
+    var dheight = 1 / output.full_size.h;
+    
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        self.locations[i].export_index = i;
+    }
+    
+    for (var i = 0, n = array_length(self.locations); i < n; i++) {
+        var source = self.locations[i];
+        var written = {
+            x: source.x * dwidth,
+            y: source.y * dheight,
+            locked: source.locked,
+            connections: array_create(variable_struct_names_count(source.connections)),
+        };
         
-        for (var i = 0, n = array_length(self.locations); i < n; i++) {
-            self.locations[i].export_index = i;
-        }
+        if (output.settings.export_names || force_save_attributes)
+            written.name = source.name;
+        if (output.settings.export_summaries || force_save_attributes)
+            written.summary = source.summary;
+        if (output.settings.export_categories || force_save_attributes)
+            written.category = source.category;
         
-        for (var i = 0, n = array_length(self.locations); i < n; i++) {
-            var source = self.locations[i];
-            var written = {
-                x: source.x * dwidth,
-                y: source.y * dheight,
-                locked: source.locked,
-                connections: array_create(variable_struct_names_count(source.connections)),
-            };
-            
-            if (output.settings.export_names || force_save_attributes)
-                written.name = source.name;
-            if (output.settings.export_summaries || force_save_attributes)
-                written.summary = source.summary;
-            if (output.settings.export_categories || force_save_attributes)
-                written.category = source.category;
-            
-            var connection_keys = variable_struct_get_names(source.connections);
-            for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
-                written.connections[j] = source.connections[$ connection_keys[j]].export_index;
-            }
-            output.locations[i] = written;
+        var connection_keys = variable_struct_get_names(source.connections);
+        for (var j = 0, n2 = array_length(connection_keys); j < n2; j++) {
+            written.connections[j] = source.connections[$ connection_keys[j]].export_index;
         }
+        output.locations[i] = written;
     }
     
     var buffer = buffer_create(1000, buffer_grow, 1);
