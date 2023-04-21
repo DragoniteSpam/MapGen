@@ -473,6 +473,9 @@ self.container.AddContent([
                         obj_main.navmesh.relevant_triangle = undefined;
                     }
                 }
+                if (keyboard_check_pressed(vk_escape)) {
+                    obj_main.navmesh.ExitEditorMode();
+                }
                 break;
             case EMapModes.AQUILA:
                 // no modifications are made in this mode
