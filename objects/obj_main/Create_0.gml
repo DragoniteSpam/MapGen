@@ -251,7 +251,7 @@ self.container.AddContent([
         })
         .SetID("MORE"),
     new EmuButton(32, EMU_AUTO, ew, eh, "Options", function() {
-        var dialog = new EmuDialog(760, 400, "MapGen Options");
+        var dialog = new EmuDialog(760, 488, "MapGen Options");
         var ew = dialog.width - 64;
         var eh = 32;
         var bw = 160;
@@ -298,6 +298,11 @@ self.container.AddContent([
                         })
                     ]),
                     new EmuTab("Credits").AddContent([
+                        new EmuButton(0, EMU_AUTO, bw, eh, "MapGen", function() {
+                            url_open("https://dragonite.itch.io/mapgen");
+                        }),
+                        new EmuText(bw, EMU_INLINE, ew, eh, "If you got this from anywhere other than the Itch.io page,"),
+                        new EmuText(bw, EMU_AUTO, ew, eh, "you've probably been scammed and should run a virus scan"),
                         new EmuButton(0, EMU_AUTO, bw, eh, "Drago", function() {
                             url_open("https://dragonite.itch.io/");
                         }),
